@@ -12,6 +12,10 @@ import io
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords 
 import nltk
+# nltk.download('stopwords')
+# nltk.download('punkt')
+# nltk.download('wordnet')
+# nltk.download('averaged_perceptron_tagger')
 
 def extract_text_pdf(pdf_path):
     """
@@ -60,18 +64,29 @@ def extract_skills(nlp_text, noun_chunks):
     :return: list: List of skills extracted
     """
     tokens = [token.text for token in nlp_text if not token.is_stop]
-    data = pd.read_csv(os.path.join(os.path.dirname(__file__), 'skills.csv')) # a simple skills dataset
+    data = pd.read_csv(os.path.join(os.path.dirname(__file__), 'dummy_jd_skills.csv')) # a simple skills dataset
     skills = list(data.columns.values)
+    # change the skills to lowercase and remove trailing whitespaces
+    # for skills that have more than one word, split them into individual words
+    # e.g. 'machine learning' -> 'machine', 'learning'
+    # but when adding to the skills list, add the original skill
+    
+    # normalise the skills
+    skills = [skill.lower().strip() for skill in skills]
+
     skillset = []
+
     # check for one-grams
     for token in tokens:
         if token.lower() in skills:
             skillset.append(token)
+
     # check for bi-grams and tri-grams
     for token in noun_chunks:
         token = token.text.lower().strip()
         if token in skills:
             skillset.append(token)
+
     return [i.capitalize() for i in set([i.lower() for i in skillset])]
 
 def extract_experience(text):
@@ -115,7 +130,7 @@ def extract_education(nlp_text):
     :return: dict where key is education degree, values is school name
     """
     edu = {}
-    education_degree = ["BACHELORS", "MASTERS", "DOCTORATE", "PHD"]
+    education_degree = ["BACHELORS", "BACHELOR'S", "MASTERS", "DOCTORATE", "PHD"]
     school_names = ["Thammasat", "Chulalongkorn", "Mahidol", "Kasetsart"]
     # Extract education degree
     doc = nlp_text
@@ -135,4 +150,11 @@ if __name__ == "__main__":
     # test extract_text
     script_dir = os.path.dirname(os.path.abspath(__file__))
     pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv2.docx'))
-    print(extract_text_main(pdf_path, ".docx"))
+    docx = extract_text_main(pdf_path, ".docx")
+    nlp = spacy.load('en_core_web_sm')
+    nlp_text = nlp(docx)
+    print("nlp_text", nlp_text)
+    print("email", extract_email(docx))
+    print("skills", extract_skills(nlp_text, nlp(docx).noun_chunks))
+    print("experience", extract_experience(docx))
+    print("education", extract_education(nlp_text))

@@ -15,7 +15,7 @@ class CvParser(object):
             'education': None,
         }
         self.__cv = cv
-        self.__text_raw = utils.extract_text(self.__cv)
+        self.__text_raw = utils.extract_text_main(self.__cv)
         self.__text = nlp(self.__text_raw)
         self.__noun_chunks = list(self.__text.noun_chunks)
         self.__get_basic_details()

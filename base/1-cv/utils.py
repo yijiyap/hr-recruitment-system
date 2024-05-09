@@ -134,12 +134,19 @@ def extract_education(nlp_text):
     school_names = ["Thammasat", "Chulalongkorn", "Mahidol", "Kasetsart"]
     # Extract education degree
     doc = nlp_text
+    print("Bachelor's" in doc.text)
     for token in doc:
         if token.text.upper() in education_degree:
             degree_name = token.text.upper()
             # Check if the following tokens form a valid name
             for next_token in doc[token.i+1]:
                 maybe_school_name = " ".join([token.text for token in doc[token.i+1:next_token.i+1]])
+                if maybe_school_name.upper() in school_names:
+                    edu[degree_name] = maybe_school_name
+                    break
+            # Check if the previous tokens form a valid name
+            for prev_token in doc[token.i-1]:
+                maybe_school_name = " ".join([token.text for token in doc[prev_token.i:token.i]])
                 if maybe_school_name.upper() in school_names:
                     edu[degree_name] = maybe_school_name
                     break

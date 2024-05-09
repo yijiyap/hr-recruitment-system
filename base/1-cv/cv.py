@@ -22,7 +22,6 @@ def add_cv():
     """
     Sample data received (to change according to the teams' needs):
     {
-        "name": "Pom",
         "role applied to": "HR Intern",
         "email": "pom@gmail.com",
         "skills": ["communication", "teamwork", "problem solving"],
@@ -45,13 +44,11 @@ def get_all_cvs():
     Sample data received (to change according to the teams' needs):
     [
         {
-            "name": "Pom",
             "role applied to": "HR Intern",
             "email": "...",
             ...
         },
         {
-            "name": "Tom",
             "role applied to": "Software Engineer",
             "email": "...",
             ...
@@ -71,7 +68,6 @@ def get_cv_by_id():
     """
     Sample data received (to change according to the teams' needs):
     {
-        "name": "Pom",
         "role applied to": "HR Intern",
         "email": "...",
         ...

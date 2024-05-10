@@ -30,6 +30,9 @@ def extract_text_docx(docx_path):
     """
     raw_text = docx2txt.process(docx_path)
     # text = [line.replace('\t', ' ') for line in raw_text.split('\n') if line]
+    # replace "•" with "\n"
+    raw_text = raw_text.replace("•", "\n")
+    raw_text = raw_text.replace("|", "\n")
     return raw_text.lower()
 
 def extract_text_main(file_path, extension):
@@ -112,6 +115,8 @@ def extract_experience(text):
     for line in lines:
         if len(line.split()) < 5:
             experiences.append(line)
+    if len(experiences) == 0 or len(experiences) > 10:
+        return "No experiences found or there was an error in the system. Please check the CV manually."
     return experiences
 
 def extract_education(nlp_text):
@@ -147,7 +152,7 @@ def extract_education(nlp_text):
 if __name__ == "__main__":
     # test extract_text
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv1.docx'))
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv4.docx'))
     docx = extract_text_main(pdf_path, ".docx")
     # print unique characters of docx
     print(docx)

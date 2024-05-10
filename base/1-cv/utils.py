@@ -38,8 +38,7 @@ def extract_text_main(file_path, extension):
     """
     text = ''
     if extension == ".pdf":
-        for page in extract_text_pdf(file_path):
-            text += " " + page
+        return extract_text_pdf(file_path)
     elif extension == ".docx" or extension == ".doc":
         text = extract_text_docx(file_path)
     return text
@@ -58,19 +57,15 @@ def extract_email(text):
 def extract_skills(nlp_text, noun_chunks):
     """
     Helper function to extract skills from the spacy nlp text
+    If a word/phrase in the cv matches the skills given by the jd, then we consider that as the candidate has that skill
 
     :param nlp_text: object: `spacy.tokens.doc.Doc`
     :param noun_chunks: list: List of noun chunks extracted from the nlp text
     :return: list: List of skills extracted
     """
     tokens = [token.text for token in nlp_text if not token.is_stop]
-    data = pd.read_csv(os.path.join(os.path.dirname(__file__), 'dummy_jd_skills.csv')) # a simple skills dataset
-    skills = list(data.columns.values)
-    # change the skills to lowercase and remove trailing whitespaces
-    # for skills that have more than one word, split them into individual words
-    # e.g. 'machine learning' -> 'machine', 'learning'
-    # but when adding to the skills list, add the original skill
-    
+    data = pd.read_csv(os.path.join(os.path.dirname(__file__), 'dummy_jd_skills.csv')) # a list of skills that aligns with the JD
+    skills = list(data.columns.values)    
     # normalise the skills
     skills = [skill.lower().strip() for skill in skills]
 
@@ -89,38 +84,62 @@ def extract_skills(nlp_text, noun_chunks):
 
     return [i.capitalize() for i in set([i.lower() for i in skillset])]
 
+# def extract_experience(text):
+#     """
+#     Helper function to extract experience from text
+
+#     :param CV_text: Plain CV text
+#     :return: list of experiences
+#     """
+#     wordnet_lemmatizer = WordNetLemmatizer()
+#     stop_words = set(stopwords.words('english'))
+#     word_tokens = nltk.word_tokenize(text)
+
+#     # remove the stop words and lemmatize
+#     filtered_sentence = [w for w in word_tokens if not w in stop_words and 
+#     wordnet_lemmatizer.lemmatize(w) not in stop_words] 
+#     sent = nltk.pos_tag(filtered_sentence)
+
+#     # parse the sentence to get the experience
+#     grammar = "P : {<NNP>+}"
+#     cp = nltk.RegexpParser(grammar)
+#     cs = cp.parse(sent)
+
+#     # extract the experience
+#     phrases = []
+#     for vp in list(cs.subtrees(filter=lambda x: x.label() == 'P')):
+#         phrases.append(" ".join([i[0] for i in vp.leaves() if len(vp.leaves()) > 1]))
+
+#     # search the word 'experience' in the chunk and then print out the text after it
+#     experience = []
+#     for phrase in phrases:
+#         if 'experience' in phrase.lower():
+#             experience.append(phrase[phrase.lower().index('experience')+10:])
+#     return experience
+
 def extract_experience(text):
-    """
-    Helper function to extract experience from text
+    # Use regular expressions to find all occurrences of date ranges
+    date_ranges = re.findall(r'([A-Z][a-z]{2}\s\d{4})\s*-\s*([A-Z][a-z]{2}\s\d{4})', text)
+    
+    # Use regular expressions to find all occurrences of job titles and organizations
+    experiences = re.findall(r'([A-Z][a-z]+ \d{4})\s*–\s*([A-Za-z\s]+)\s•\s([A-Za-z\s]+)\s•\s([A-Za-z\s]+)', text)
+    
+    # Format extracted data into a list of dictionaries
+    extracted_experience = []
+    for i in range(len(date_ranges)):
+        start_date, end_date = date_ranges[i]
+        position, organization, location, _ = experiences[i]
+        experience_entry = {
+            "start_date": start_date,
+            "end_date": end_date,
+            "position": position,
+            "organization": organization,
+            "location": location
+        }
+        extracted_experience.append(experience_entry)
+    
+    return extracted_experience
 
-    :param resume_text: Plain resume text
-    :return: list of experiences
-    """
-    wordnet_lemmatizer = WordNetLemmatizer()
-    stop_words = set(stopwords.words('english'))
-    word_tokens = nltk.word_tokenize(text)
-
-    # remove the stop words and lemmatize
-    filtered_sentence = [w for w in word_tokens if not w in stop_words and 
-    wordnet_lemmatizer.lemmatize(w) not in stop_words] 
-    sent = nltk.pos_tag(filtered_sentence)
-
-    # parse the sentence to get the experience
-    grammar = "P : {<NNP>+}"
-    cp = nltk.RegexpParser(grammar)
-    cs = cp.parse(sent)
-
-    # extract the experience
-    phrases = []
-    for vp in list(cs.subtrees(filter=lambda x: x.label() == 'P')):
-        phrases.append(" ".join([i[0] for i in vp.leaves() if len(vp.leaves()) > 1]))
-
-    # search the word 'experience' in the chunk and then print out the text after it
-    experience = []
-    for phrase in phrases:
-        if 'experience' in phrase.lower():
-            experience.append(phrase[phrase.lower().index('experience')+10:])
-    return experience
 
 def extract_education(nlp_text):
     """
@@ -134,7 +153,6 @@ def extract_education(nlp_text):
     school_names = ["Thammasat", "Chulalongkorn", "Mahidol", "Kasetsart"]
     # Extract education degree
     doc = nlp_text
-    print("Bachelor's" in doc.text)
     for token in doc:
         if token.text.upper() in education_degree:
             degree_name = token.text.upper()
@@ -156,12 +174,12 @@ def extract_education(nlp_text):
 if __name__ == "__main__":
     # test extract_text
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv2.docx'))
-    docx = extract_text_main(pdf_path, ".docx")
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/pdf/cv5.pdf'))
+    docx = extract_text_main(pdf_path, ".pdf")
     nlp = spacy.load('en_core_web_sm')
     nlp_text = nlp(docx)
-    print("nlp_text", nlp_text)
-    print("email", extract_email(docx))
-    print("skills", extract_skills(nlp_text, nlp(docx).noun_chunks))
-    print("experience", extract_experience(docx))
-    print("education", extract_education(nlp_text))
+    print("\ntext: \n", docx)
+    print("\nemail: \n", extract_email(docx))
+    print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
+    print("\nexperience: \n", extract_experience(docx))
+    print("\neducation: \n", extract_education(nlp_text))

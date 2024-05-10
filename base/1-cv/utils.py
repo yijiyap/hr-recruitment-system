@@ -17,6 +17,11 @@ import nltk
 # nltk.download('wordnet')
 # nltk.download('averaged_perceptron_tagger')
 
+SKILLS_CSV = pd.read_csv(os.path.join(os.path.dirname(__file__), 
+'dummy_jd_skills.csv')) # a list of skills that are accepted by Indorama
+SKILLS = list(SKILLS_CSV.columns.values)    
+SKILLS = [skill.lower().strip() for skill in SKILLS]
+
 def extract_text_pdf(pdf_path):
     """
     Helper function to extract plain text from .pdf files
@@ -65,22 +70,18 @@ def extract_skills(nlp_text, noun_chunks):
     :return: list: List of skills extracted
     """
     tokens = [token.text for token in nlp_text if not token.is_stop]
-    data = pd.read_csv(os.path.join(os.path.dirname(__file__), 'dummy_jd_skills.csv')) # a list of skills that aligns with the JD
-    skills = list(data.columns.values)    
-    # normalise the skills
-    skills = [skill.lower().strip() for skill in skills]
 
     skillset = []
 
     # check for one-grams
     for token in tokens:
-        if token.lower() in skills:
+        if token.lower() in SKILLS:
             skillset.append(token)
 
     # check for bi-grams and tri-grams
     for token in noun_chunks:
         token = token.text.lower().strip()
-        if token in skills:
+        if token in SKILLS:
             skillset.append(token)
 
     return [i.capitalize() for i in set([i.lower() for i in skillset])]
@@ -113,9 +114,9 @@ def extract_experience(text):
     # look for sentences that have less than 5 words
     experiences = []
     for line in lines:
-        if len(line.split()) < 5:
-            experiences.append(line)
-    if len(experiences) == 0 or len(experiences) > 10:
+        if len(line.split()) < 5 and line not in SKILLS:
+            experiences.append(line.strip())
+    if len(experiences) == 0 or len(experiences) > 100:
         return "No experiences found or there was an error in the system. Please check the CV manually."
     return experiences
 
@@ -127,7 +128,7 @@ def extract_education(nlp_text):
     :return: dict where key is education degree, values is school name
     """
     edu = {}
-    education_degree = ["BACHELORS", "BACHELOR'S", "MASTERS", "DOCTORATE", "PHD"]
+    education_degree = ["BACHELORS", "BACHELOR'S", "MASTERS", "DOCTORATE", "PHD", 'BE','B.E.', 'B.E', 'BS', 'B.S', 'ME', 'M.E', 'M.E.', 'MS', 'M.S', 'BTECH', 'MTECH', 'M.TECH', 'BSc', 'B.Sc', 'MSc', 'M.Sc', 'BA', 'B.A', 'MA', 'M.A', 'MBA', 'M.B.A', 'M.B.A.', 'PHD', 'Ph.D', 'Ph.D.']
     school_names = ["Thammasat", "Chulalongkorn", "Mahidol", "Kasetsart"]
     # Extract education degree
     doc = nlp_text
@@ -147,21 +148,17 @@ def extract_education(nlp_text):
                     edu[degree_name] = maybe_school_name
                     break
     return edu
-        
+
 # test out the functions
 if __name__ == "__main__":
-    # test extract_text
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv4.docx'))
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv2.docx'))
     docx = extract_text_main(pdf_path, ".docx")
     # print unique characters of docx
-    print(docx)
-    print(set(docx))
-
-    # nlp = spacy.load('en_core_web_sm')
-    # nlp_text = nlp(docx)
-    # print("\ntext: \n", docx)
+    nlp = spacy.load('en_core_web_sm')
+    nlp_text = nlp(docx)
+    print("text: \n", docx)
     # print("\nemail: \n", extract_email(docx))
     # print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
-    print("\nexperience: \n", extract_experience(docx))
-    # print("\neducation: \n", extract_education(nlp_text))
+    # print("\nexperience: \n", extract_experience(docx))
+    print("\neducation: \n", extract_education(nlp_text))

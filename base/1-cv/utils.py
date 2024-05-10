@@ -5,7 +5,7 @@ import docx2txt
 import pandas as pd
 # from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 # from pdfminer.converter import TextConverter
-# from pdfminer.layout import LAParams
+from pdfminer.layout import LAParams
 # from pdfminer.pdfpage import PDFPage
 from pdfminer.high_level import extract_text
 import io
@@ -29,19 +29,17 @@ def extract_text_docx(docx_path):
     Helper function to extract plain text from .docx files
     """
     raw_text = docx2txt.process(docx_path)
-    text = [line.replace('\t', ' ') for line in raw_text.split('\n') if line]
-    return " ".join(text)
+    # text = [line.replace('\t', ' ') for line in raw_text.split('\n') if line]
+    return raw_text.lower()
 
 def extract_text_main(file_path, extension):
     """
     Wrapper function to detect the file extension and call text extraction functions accordingly
     """
-    text = ''
     if extension == ".pdf":
         return extract_text_pdf(file_path)
     elif extension == ".docx" or extension == ".doc":
-        text = extract_text_docx(file_path)
-    return text
+        return extract_text_docx(file_path)
 
 def extract_email(text):
     """
@@ -84,62 +82,37 @@ def extract_skills(nlp_text, noun_chunks):
 
     return [i.capitalize() for i in set([i.lower() for i in skillset])]
 
-# def extract_experience(text):
-#     """
-#     Helper function to extract experience from text
-
-#     :param CV_text: Plain CV text
-#     :return: list of experiences
-#     """
-#     wordnet_lemmatizer = WordNetLemmatizer()
-#     stop_words = set(stopwords.words('english'))
-#     word_tokens = nltk.word_tokenize(text)
-
-#     # remove the stop words and lemmatize
-#     filtered_sentence = [w for w in word_tokens if not w in stop_words and 
-#     wordnet_lemmatizer.lemmatize(w) not in stop_words] 
-#     sent = nltk.pos_tag(filtered_sentence)
-
-#     # parse the sentence to get the experience
-#     grammar = "P : {<NNP>+}"
-#     cp = nltk.RegexpParser(grammar)
-#     cs = cp.parse(sent)
-
-#     # extract the experience
-#     phrases = []
-#     for vp in list(cs.subtrees(filter=lambda x: x.label() == 'P')):
-#         phrases.append(" ".join([i[0] for i in vp.leaves() if len(vp.leaves()) > 1]))
-
-#     # search the word 'experience' in the chunk and then print out the text after it
-#     experience = []
-#     for phrase in phrases:
-#         if 'experience' in phrase.lower():
-#             experience.append(phrase[phrase.lower().index('experience')+10:])
-#     return experience
-
 def extract_experience(text):
-    # Use regular expressions to find all occurrences of date ranges
-    date_ranges = re.findall(r'([A-Z][a-z]{2}\s\d{4})\s*-\s*([A-Z][a-z]{2}\s\d{4})', text)
-    
-    # Use regular expressions to find all occurrences of job titles and organizations
-    experiences = re.findall(r'([A-Z][a-z]+ \d{4})\s*–\s*([A-Za-z\s]+)\s•\s([A-Za-z\s]+)\s•\s([A-Za-z\s]+)', text)
-    
-    # Format extracted data into a list of dictionaries
-    extracted_experience = []
-    for i in range(len(date_ranges)):
-        start_date, end_date = date_ranges[i]
-        position, organization, location, _ = experiences[i]
-        experience_entry = {
-            "start_date": start_date,
-            "end_date": end_date,
-            "position": position,
-            "organization": organization,
-            "location": location
-        }
-        extracted_experience.append(experience_entry)
-    
-    return extracted_experience
+    """
+    Helper function to extract experience from text
 
+    :param CV_text: Plain CV text
+    :return: list of experiences
+    """
+    # First look for the word "experience" or "experiences" in the text. So the first step is to look for the index of the words "experience" or "experiences". This acts as a marker to begin our search for experiences.
+
+    # Seocondly, for most CVs, the title of the role is less than 5 words. As such, we can look for sentences that have less than 5 words, and append them to the experience list
+    
+    # use regex to find the first occurence of the word "experience" or "experiences"
+    pattern = r'\b(?:experience|experiences)\b'
+    match = re.search(pattern, text)
+    if match:
+        start = match.start()
+        shortlisted_text = text[start:]
+    else:
+        return None
+
+    # split the text by line breaks
+    lines = shortlisted_text.split('\n')
+    # remove empty strings
+    lines = [line for line in lines if line]
+
+    # look for sentences that have less than 5 words
+    experiences = []
+    for line in lines:
+        if len(line.split()) < 5:
+            experiences.append(line)
+    return experiences
 
 def extract_education(nlp_text):
     """
@@ -174,12 +147,16 @@ def extract_education(nlp_text):
 if __name__ == "__main__":
     # test extract_text
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/pdf/cv5.pdf'))
-    docx = extract_text_main(pdf_path, ".pdf")
-    nlp = spacy.load('en_core_web_sm')
-    nlp_text = nlp(docx)
-    print("\ntext: \n", docx)
-    print("\nemail: \n", extract_email(docx))
-    print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv1.docx'))
+    docx = extract_text_main(pdf_path, ".docx")
+    # print unique characters of docx
+    print(docx)
+    print(set(docx))
+
+    # nlp = spacy.load('en_core_web_sm')
+    # nlp_text = nlp(docx)
+    # print("\ntext: \n", docx)
+    # print("\nemail: \n", extract_email(docx))
+    # print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
     print("\nexperience: \n", extract_experience(docx))
-    print("\neducation: \n", extract_education(nlp_text))
+    # print("\neducation: \n", extract_education(nlp_text))

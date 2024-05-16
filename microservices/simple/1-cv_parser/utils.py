@@ -36,8 +36,8 @@ def extract_text_docx(docx_path):
     raw_text = docx2txt.process(docx_path)
     # text = [line.replace('\t', ' ') for line in raw_text.split('\n') if line]
     # replace "•" with "\n"
-    raw_text = raw_text.replace("•", "\n")
-    raw_text = raw_text.replace("|", "\n")
+    # raw_text = raw_text.replace("•", "\n")
+    # raw_text = raw_text.replace("|", "\n")
     return raw_text.lower()
 
 def extract_text_main(file_path, extension):
@@ -110,7 +110,7 @@ def extract_experience(text):
     match = re.search(pattern, text)
     if match:
         start = match.start()
-        shortlisted_text = text[start:]
+        shortlisted_text = text[start+10:]
     else:
         return None
 
@@ -135,39 +135,37 @@ def extract_education(nlp_text):
     :param nlp_text: object: `spacy.tokens.doc.Doc`
     :return: dict where key is education degree, values is school name
     """
-    edu = {}
+    education_info = {}
     school_names = ["thammasat", "chulalongkorn", "mahidol", "kasetsart", "thammasat university", "chulalongkorn university"]
-    education_degree = ["BACHELORS", "BACHELOR'S", "MASTERS", "DOCTORATE", "PHD", 'BE','B.E.', 'B.E', 'BS', 'B.S', 'ME', 'M.E', 'M.E.', 'MS', 'M.S', 'BTECH', 'MTECH', 'M.TECH', 'BSc', 'B.Sc', 'MSc', 'M.Sc', 'BA', 'B.A', 'MA', 'M.A', 'MBA', 'M.B.A', 'M.B.A.', 'PHD', 'Ph.D', 'Ph.D.']
-    education_degree = [degree.lower() for degree in education_degree]
-    # Extract education degree
-    doc = nlp_text
-    for token in doc:
-        if token.text.lower() in education_degree:
-            degree_name = token.text.lower()
-            # Check if the following tokens form a valid name
-            for next_token in doc[token.i+1:]:
-                maybe_school_name = " ".join([token.text for token in doc[token.i+1:next_token.i+1]])
-                # print(maybe_school_name)
-                if maybe_school_name.lower() in school_names:
-                    edu[degree_name] = maybe_school_name
-                    break
-            # Check if the previous tokens form a valid name
-            for prev_token in doc[token.i-1:]:
-                maybe_school_name = " ".join([token.text for token in doc[prev_token.i:token.i]])
-                if maybe_school_name.lower() in school_names:
-                    edu[degree_name] = maybe_school_name
-                    break
-    return edu
+    education_degrees = ["BACHELORS", "BACHELOR'S", "MASTERS", "DOCTORATE", "PHD", 'BE','B.E.', 'B.E', 'BS', 'B.S', 'ME', 'M.E', 'M.E.', 'MS', 'M.S', 'BTECH', 'MTECH', 'M.TECH', 'BSc', 'B.Sc', 'MSc', 'M.Sc', 'BA', 'B.A', 'MA', 'M.A', 'MBA', 'M.B.A', 'M.B.A.', 'PHD', 'Ph.D', 'Ph.D.']
+    education_degrees = [degree.lower() for degree in education_degrees]
+    # use regex to find the first occurence of the word "Education" or "Academics" or "Qualifications" or "Qualification" or "Educational Background" or "Academic Background"
+    pattern = r'\b(?:education|academics|qualifications|qualification|educational background|academic background)(?=(?:  |\n|\t))\b'
+    match = re.search(pattern, nlp_text.text)
+    if match:
+        start = match.start()
+        education_text = nlp_text.text[start:]
+        # Define regex pattern to extract university and degree
+        education_extraction_pattern = r'([^|]+)\s*\|\s*([^\n]+)'
+        info_match = re.search(education_extraction_pattern, education_text, re.IGNORECASE)
+        if info_match:
+            university = info_match.group(1).strip()
+            degree = info_match.group(2).strip()
+            education_info['University'] = university
+            education_info['Degree'] = degree
+        return education_info
+    else:
+        return None
 
 # test out the functions
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv1.docx'))
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv3.docx'))
     docx = extract_text_main(pdf_path, ".docx")
     # print unique characters of docx
     nlp = spacy.load('en_core_web_sm')
     nlp_text = nlp(docx)
     # print("\nemail: \n", extract_email(docx))
-    print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
+    # print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
     # print("\nexperience: \n", extract_experience(docx))
-    # print("\neducation: \n", extract_education(nlp_text))
+    print("\neducation: \n", extract_education(nlp_text))

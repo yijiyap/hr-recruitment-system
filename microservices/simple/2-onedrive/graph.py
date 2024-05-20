@@ -1,0 +1,63 @@
+from dotenv import load_dotenv, find_dotenv
+import os
+import configparser
+
+from configparser import SectionProxy
+from azure.identity import DeviceCodeCredential
+from msgraph import GraphServiceClient
+# from msgraph.generated.users.item.user_item_request_builder import UserItemRequestBuilder
+# from msgraph.generated.users.item.mail_folders.item.messages.messages_request_builder import (
+#     MessagesRequestBuilder)
+# from msgraph.generated.users.item.send_mail.send_mail_post_request_body import (
+#     SendMailPostRequestBody)
+# from msgraph.generated.models.message import Message
+# from msgraph.generated.models.item_body import ItemBody
+# from msgraph.generated.models.body_type import BodyType
+# from msgraph.generated.models.recipient import Recipient
+# from msgraph.generated.models.email_address import EmailAddress
+
+# load envt variables from .env
+load_dotenv(find_dotenv())
+
+# initialise configparser
+config = configparser.ConfigParser()
+
+# Read envt variables
+tenant_id = os.getenv('AZURE_TENANT_ID')
+client_id = os.getenv('AZURE_CLIENT_ID')
+azure_graph_user_scopes = os.getenv('AZURE_GRAPH_USER_SCOPES')
+
+# set values in config object
+config['azure'] = {
+    'tenantId': tenant_id,
+    'clientId': client_id,
+    'graphUserScopes': azure_graph_user_scopes
+}
+
+# save config to file
+with open("config.cfg", "w") as configfile:
+    config.write(configfile)
+
+class Graph:
+    settings: SectionProxy
+    device_code_credential: DeviceCodeCredential
+    user_client: GraphServiceClient
+
+    def __init__(self, config: SectionProxy):
+        self.settings = config
+        client_id = self.settings['clientId']
+        tenant_id = self.settings['tenantId']
+        graph_scopes = self.settings['graphUserScopes'].split(' ')
+
+        self.device_code_credential = DeviceCodeCredential(client_id, tenant_id=tenant_id)
+        self.user_client = GraphServiceClient(self.device_code_credential, graph_scopes)
+    
+    async def get_user_token(self):
+        graph_scopes = self.settings['graphUserScopes']
+        access_token = self.device_code_credential.get_token(graph_scopes)
+        return access_token.token
+
+    async def get_files(self):
+        # Get the files
+        # TODO
+        return

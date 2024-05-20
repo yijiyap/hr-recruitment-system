@@ -160,7 +160,7 @@ def extract_education(nlp_text):
 # test out the functions
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../sample_cv/doc/cv3.docx'))
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../../sample_cv/doc/cv3.docx'))
     docx = extract_text_main(pdf_path, ".docx")
     # print unique characters of docx
     nlp = spacy.load('en_core_web_sm')

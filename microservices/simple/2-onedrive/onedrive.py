@@ -1,69 +1,43 @@
 import requests
 from flask import Flask, jsonify
 import os
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+import asyncio
+from graph import Graph
+import configparser
+from msgraph.generated.models.o_data_errors.o_data_error import ODataError
 
-# app = Flask(__name__)
+# create an instance of the Graph class
+async def main():
+    print('Starting the Graph API')
 
-# @app.route('/list_files')
-# def list_files():
-#     tenant_id = os.getenv('AZURE_TENANT_ID')
-#     client_id = os.getenv('AZURE_CLIENT_ID')
-#     client_secret = os.getenv('AZURE_CLIENT_SECRET_ID')
+    # Load settings from config file
+    config = configparser.ConfigParser()
+    config.read('config.cfg')
+    azure_settings = config['azure']
 
-#     print(tenant_id, client_id, client_secret)
+    # Create an instance of the Graph class
+    graph: Graph = Graph(azure_settings)
 
-    # # obtain access token
-    # token_url = f'https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token'
-    # token_data = {
-    #     'grant_type': 'client_credentials',
-    #     'client_id': client_id,
-    #     'client_secret': client_secret,
-    #     'scope': 'https://graph.microsoft.com/.default'
-    # }
-    # token_response = requests.post(token_url, data=token_data)
-    # access_token = token_response.json().get('access_token')
+    try:
+        # Get the access token
+        await display_access_token(graph)
 
-    # # list files in OneDrive
-    # graph_url = 'https://graph.microsoft.com/v1.0/me/drive/root/children'
-    # headers = {
-    #     'Authorization': f'Bearer {access_token}'
-    # }
-    # graph_response = requests.get(graph_url, headers=headers)
-    # files = graph_response.json().get('value')
-
-    # return jsonify(files)
-
-# if __name__ == '__main__':
-#     app.run(debug=True)
-
-
-tenant_id = os.getenv('AZURE_TENANT_ID')
-# tenent_id = "consumers"
-client_id = os.getenv('AZURE_CLIENT_ID')
-client_secret = os.getenv('AZURE_CLIENT_SECRET_VAlUE')
-
-print(tenant_id, client_id, client_secret)
-
-# obtain access token
-token_url = f'https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token'
-token_data = {
+        # await display_files(graph)
+        print('Displayed files')
     
-    'grant_type': 'client_credentials',
-    'client_id': client_id,
-    'client_secret': client_secret,
-    'scope': 'https://graph.microsoft.com/.default'
-}
-token_response = requests.post(token_url, data=token_data)
-access_token = token_response.json().get('access_token')
+    except ODataError as odata_error:
+        print('Error:')
+        if odata_error.error:
+            print(odata_error.error.code, odata_error.error.message)
 
-print(token_response.json())
+async def display_access_token(graph: Graph):
+    # Get the files
+    token = await graph.get_user_token()
+    print("User token:", token, "\n")
 
-# # list files in OneDrive
-# graph_url = 'https://graph.microsoft.com/v1.0/me/drive/root/children'
-# headers = {
-#     'Authorization': f'Bearer {access_token}'
-# }
-# graph_response = requests.get(graph_url, headers=headers)
-# files = graph_response.json().get('value')
+async def display_files(graph: Graph):
+    # Get the files
+    # TODO
+     return
+
+asyncio.run(main())

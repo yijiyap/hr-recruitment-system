@@ -151,8 +151,8 @@ def extract_experience(text):
 # test out the functions
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../../sample_cv/pdf/cv1.pdf'))
-    docx = extract_text_main(pdf_path, ".pdf")
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../../sample_cv/doc/cv1.docx'))
+    docx = extract_text_main(pdf_path, ".docx")
     nlp = spacy.load('en_core_web_sm')
     nlp_text = nlp(docx)
     print("*******************EMAIL*******************")

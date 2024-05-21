@@ -2,7 +2,7 @@ import os
 import spacy
 import pprint
 from spacy.matcher import Matcher
-from . import utils
+from . import cv_utils
 
 class CvParser(object):
     def __init__(self, cv):
@@ -12,10 +12,10 @@ class CvParser(object):
             'email': None,
             'skills': None,
             'experience': None,
-            'education': None,
+            # 'education': None,
         }
         self.__cv = cv
-        self.__text_raw = utils.extract_text_main(self.__cv)
+        self.__text_raw = cv_utils.extract_text_main(self.__cv)
         self.__text = nlp(self.__text_raw)
         self.__noun_chunks = list(self.__text.noun_chunks)
         self.__get_basic_details()
@@ -25,14 +25,14 @@ class CvParser(object):
         return self.__details
     
     def __get_basic_details(self):
-        email = utils.extract_email(self.__text)
-        skills = utils.extract_skills(self.__nlp, self.__noun_chunks)
-        experience = utils.extract_experience(self.__text)
-        education = utils.extract_education([sentence.string.strip() for sentence in self.__nlp.sentence])
+        email = cv_utils.extract_email(self.__text)
+        skills = cv_utils.extract_skills(self.__nlp, self.__noun_chunks)
+        experience = cv_utils.extract_experience(self.__text)
+        # education = cv_utils.extract_education([sentence.string.strip() for sentence in self.__nlp.sentence])
         self.__details['email'] = email
         self.__details['skills'] = skills
         self.__details['experience'] = experience
-        self.__details['education'] = education
+        # self.__details['education'] = education
         return
     
 def cv_result_wrapper(cv):

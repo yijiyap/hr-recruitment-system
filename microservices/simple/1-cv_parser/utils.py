@@ -17,8 +17,7 @@ import nltk
 # nltk.download('wordnet')
 # nltk.download('averaged_perceptron_tagger')
 
-SKILLS_CSV = pd.read_csv(os.path.join(os.path.dirname(__file__), 
-'dummy_jd_skills.csv')) # a list of skills that are accepted by Indorama
+SKILLS_CSV = pd.read_csv(os.path.join(os.path.dirname(__file__), 'dummy_jd_skills.csv')) # a list of skills that are accepted by Indorama
 SKILLS = list(SKILLS_CSV.columns.values)    
 SKILLS = [skill.lower().strip() for skill in SKILLS]
 
@@ -128,44 +127,37 @@ def extract_experience(text):
         return "No experiences found or there was an error in the system. Please check the CV manually."
     return experiences
 
-def extract_education(nlp_text):
-    """
-    Helper function to extract education from nlp text
+# def extract_education(nlp_text): # take school name from the application form
+#     """
+#     Helper function to extract education from nlp text
 
-    :param nlp_text: object: `spacy.tokens.doc.Doc`
-    :return: dict where key is education degree, values is school name
-    """
-    education_info = {}
-    school_names = ["thammasat", "chulalongkorn", "mahidol", "kasetsart", "thammasat university", "chulalongkorn university"]
-    education_degrees = ["BACHELORS", "BACHELOR'S", "MASTERS", "DOCTORATE", "PHD", 'BE','B.E.', 'B.E', 'BS', 'B.S', 'ME', 'M.E', 'M.E.', 'MS', 'M.S', 'BTECH', 'MTECH', 'M.TECH', 'BSc', 'B.Sc', 'MSc', 'M.Sc', 'BA', 'B.A', 'MA', 'M.A', 'MBA', 'M.B.A', 'M.B.A.', 'PHD', 'Ph.D', 'Ph.D.']
-    education_degrees = [degree.lower() for degree in education_degrees]
-    # use regex to find the first occurence of the word "Education" or "Academics" or "Qualifications" or "Qualification" or "Educational Background" or "Academic Background"
-    pattern = r'\b(?:education|academics|qualifications|qualification|educational background|academic background)(?=(?:  |\n|\t))\b'
-    match = re.search(pattern, nlp_text.text)
-    if match:
-        start = match.start()
-        education_text = nlp_text.text[start:]
-        # Define regex pattern to extract university and degree
-        education_extraction_pattern = r'([^|]+)\s*\|\s*([^\n]+)'
-        info_match = re.search(education_extraction_pattern, education_text, re.IGNORECASE)
-        if info_match:
-            university = info_match.group(1).strip()
-            degree = info_match.group(2).strip()
-            education_info['University'] = university
-            education_info['Degree'] = degree
-        return education_info
-    else:
-        return None
+#     :param nlp_text: object: `spacy.tokens.doc.Doc`
+#     :return: dict where key is education degree, values is school name
+#     """
+#     # school_names = ["thammasat", "chulalongkorn", "mahidol", "kasetsart", "thammasat university", "chulalongkorn university"]
+#     education_degrees = ["BACHELORS", "BACHELOR'S", "MASTERS", "DOCTORATE", "PHD", 'BE','B.E.', 'B.E', 'BS', 'B.S', 'ME', 'M.E', 'M.E.', 'MS', 'M.S', 'BTECH', 'MTECH', 'M.TECH', 'BSc', 'B.Sc', 'MSc', 'M.Sc', 'BA', 'B.A', 'MA', 'M.A', 'MBA', 'M.B.A', 'M.B.A.', 'PHD', 'Ph.D', 'Ph.D.']
+#     education_degrees = [degree.lower() for degree in education_degrees]
+#     # use regex to find the first occurence of the word "Education" or "Academics" or "Qualifications" or "Qualification" or "Educational Background" or "Academic Background"
+#     pattern = r'\b(?:education|academics|qualifications|qualification|educational background|academic background)(?=(?:  |\n|\t))\b'
+#     match = re.search(pattern, nlp_text.text)
+#     if match:
+#         start = match.start() # get the index of the word "education"
+#         education_text = nlp_text.text[start:] # get the text from the index of the word "education" to the end of the text
+#         print("********")
+#         print(education_text)
+#     else:
+#         return None
 
 # test out the functions
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    pdf_path = os.path.abspath(os.path.join(script_dir, '../../../sample_cv/doc/cv3.docx'))
-    docx = extract_text_main(pdf_path, ".docx")
-    # print unique characters of docx
+    pdf_path = os.path.abspath(os.path.join(script_dir, '../../../sample_cv/pdf/cv1.pdf'))
+    docx = extract_text_main(pdf_path, ".pdf")
     nlp = spacy.load('en_core_web_sm')
     nlp_text = nlp(docx)
-    # print("\nemail: \n", extract_email(docx))
-    # print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
-    # print("\nexperience: \n", extract_experience(docx))
-    print("\neducation: \n", extract_education(nlp_text))
+    print("*******************EMAIL*******************")
+    print("\nemail: \n", extract_email(docx))
+    print("*******************SKILLS*******************")
+    print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
+    print("*******************EXPERIENCE*******************")
+    print("\nexperience: \n", extract_experience(docx))

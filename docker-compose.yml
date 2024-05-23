@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  onedrive:
+    build:
+      context: ./microservices/simple/2-onedrive
+      dockerfile: Dockerfile
+    environment:
+      - AZURE_TENANT_ID
+      - AZURE_CLIENT_ID
+      - AZURE_CLIENT_SECRET_ID

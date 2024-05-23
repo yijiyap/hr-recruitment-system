@@ -16,23 +16,8 @@ CORS(app)
 def ping():
     return "pong"
 
-@app.route("/shortlist_cv", methods=["POST"])
-def shortlist_cv():
-    data = request.get_json()
-    cv = data.get("cv")
-    if not cv:
-        return jsonify({
-            "error": "Please provide a CV"
-        }), 400
-    try:
-        extracted_details = cv_utils.cv_result_wrapper(cv)
-        return jsonify(extracted_details)
-    except Exception as e:
-        return jsonify({
-            "error": str(e)
-        }), 500
-    
-def shortlist_cv_helper(cv):
+@app.route("/cv/all", methods=["GET"])
+def get_all_cv():
     return
 
 if __name__ == "__main__":

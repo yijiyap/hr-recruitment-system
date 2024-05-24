@@ -11,11 +11,14 @@ import requests
 from flask_cors import CORS
 from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
+import spacy
 
 UPLOAD_FOLDER_CV = "uploads/cv"
 
 app = Flask(__name__)
 CORS(app)
+
+nlp = spacy.load('en_core_web_sm')
 
 @app.route("/ping", methods=["GET"])
 def ping():
@@ -42,22 +45,19 @@ def upload_file():
             file.save(os.path.join(UPLOAD_FOLDER_CV, filename))
 
             # extract the text from the CV
-            pdf_file_obj = open(os.path.join(UPLOAD_FOLDER_CV, filename), 'rb')
-            pdf_reader = PyPDF2.PdfReader(pdf_file_obj)
-            text = ""
-            for page_num in range(len(pdf_reader.pages)):
-                page = pdf_reader.pages[page_num]
-                text += page.extract_text()
-            pdf_file_obj.close()
-            print(text)
-
-            # raw_text = cv_utils.extract_text_main(file, file.filename.split(".")[-1])
-            # print(raw_text)
+            raw_text = cv_utils.extract_text_main(os.path.join(UPLOAD_FOLDER_CV, filename), filename.split(".")[-1])
+            print(raw_text)
+            nlp_text = nlp(raw_text)
 
             # prepare CV data to be sent
-            # data = {
-            #     "text": raw_text
-            # }
+            data = {
+                "raw_text": raw_text,
+                "nlp_text": nlp_text,
+                "email": cv_utils.extract_email(raw_text),
+                "skills": cv_utils.extract_skills(nlp_text, nlp_text.noun_chunks),
+                "experience": cv_utils.extract_experience(raw_text)
+            }
+            print(data)
 
             # send the CV data to the filtering microservice
             # url = "http://localhost:5001/upload"
@@ -65,5 +65,6 @@ def upload_file():
             # return response.json()
         # except Exception as e:
             # return jsonify({"error": str(e)})
+    return
 if __name__ == "__main__":
     app.run(port=5002, debug=True)

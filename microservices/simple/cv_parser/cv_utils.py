@@ -43,9 +43,9 @@ def extract_text_main(file_path, extension):
     """
     Wrapper function to detect the file extension and call text extraction functions accordingly
     """
-    if extension == ".pdf":
+    if extension == "pdf":
         return extract_text_pdf(file_path)
-    elif extension == ".docx" or extension == ".doc":
+    elif extension == "docx" or extension == "doc":
         return extract_text_docx(file_path)
 
 def extract_email(text):

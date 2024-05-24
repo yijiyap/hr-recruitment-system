@@ -19,3 +19,15 @@ def calculate_fitness_score(job_description, applicant_info):
     score = (matching_skills + matching_experiences) / len(job_keywords)
 
     return score * 100  # Convert to percentage
+
+def rank_applicants(job_description, applicants):
+    # Rank the applicants based on their fitness score
+    ranked_applicants = []
+
+    for applicant in applicants:
+        fitness_score = calculate_fitness_score(job_description, applicant)
+        ranked_applicants.append((applicant, fitness_score))
+
+    ranked_applicants.sort(key=lambda x: x[1], reverse=True)
+
+    return ranked_applicants

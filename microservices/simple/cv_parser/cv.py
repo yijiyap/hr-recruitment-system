@@ -24,14 +24,16 @@ nlp = spacy.load('en_core_web_sm')
 def ping():
     return "pong"
 
-@app.route("/cv/all", methods=["GET"])
+@app.route("/all", methods=["GET"])
 def get_all_cv():
     return
 
-@app.route("/upload", methods=["POST"])
+@app.route("/upload_cv", methods=["POST"])
 def upload_file():
     """
-    To receive a pdf file of the CV, parse it, and POST to the filtering microservice
+    To receive a pdf file of the CV, 
+    parse it, 
+    and POST to the filtering microservice.
     """
     if 'file' not in request.files:
         return jsonify({"error": "No file part"})

@@ -148,6 +148,8 @@ def extract_experience(text):
 #     else:
 #         return None
 
+
+
 # test out the functions
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -155,9 +157,9 @@ if __name__ == "__main__":
     docx = extract_text_main(pdf_path, ".docx")
     nlp = spacy.load('en_core_web_sm')
     nlp_text = nlp(docx)
-    print("*******************EMAIL*******************")
-    print("\nemail: \n", extract_email(docx))
-    print("*******************SKILLS*******************")
-    print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
-    print("*******************EXPERIENCE*******************")
-    print("\nexperience: \n", extract_experience(docx))
+    # print("*******************EMAIL*******************")
+    # print("\nemail: \n", extract_email(docx))
+    # print("*******************SKILLS*******************")
+    # print("\nskills: \n", extract_skills(nlp_text, nlp(docx).noun_chunks))
+    # print("*******************EXPERIENCE*******************")
+    # print("\nexperience: \n", extract_experience(docx))

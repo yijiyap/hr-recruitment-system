@@ -5,38 +5,32 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { readPdf } from 'lib/parse-resume-from-pdf/read-pdf'
- 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    // Process a GET request
-    res.status(200).json({ message: 'Hello from upload_CV! (Get)' })
+import path from 'path'
+import formidable from 'formidable-serverless'
 
-  } else if (req.method === 'POST') {
-    // Handle POST method
-    res.status(200).json({ message: 'Hello from upload_CV! (Post)' })
+const uploadfile = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === 'POST') {
+    return uploadfilePOST(req, res)
+  } else {
+    res.setHeader('Allow', ['POST'])
+    res.status(405).end(`Method ${req.method} Not Allowed`)
+  }
 
-    // Taken from /src/app/resume-parser/page.tsx
-    readPdf(req.body)
-      .then(textItems => {
-        // Process the textItms returned by readPdf
-        console.log(textItems)
-      })
-      .catch(error => {
-        // Handle any errors that occurrred while reading the PDF
-        console.error(error)
-      })
-
-
-    // Parse the incoming request containing the form data
-    console.log(req.body)
+  async function uploadfilePOST (req, res) {
+    const form = new formidable.IncomingForm()
+    form.uploadDir = path.join(process.cwd(), 'uploads')
+    form.keepExtensions = true
+    form.parse(req, (err, fields, files) => {
+      if (err) res.status(500).send(err)
+      res.status(200).json({ fields, files })
+    })
   }
 }
 
-
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
+    bodyParser: false
+  }
 }
+
+export default uploadfile

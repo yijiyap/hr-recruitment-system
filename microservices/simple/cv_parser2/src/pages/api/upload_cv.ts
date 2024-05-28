@@ -49,8 +49,8 @@ async function uploadfilePOST (req: NextApiRequest, res: NextApiResponse) {
 
       console.log(resume);
 
-      
-      
+      // Send the resume back to another endpoint
+
 
     });
     res.status(200).json({ fields, files })

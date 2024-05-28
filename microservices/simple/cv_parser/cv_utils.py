@@ -12,10 +12,10 @@ import io
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords 
 import nltk
-# nltk.download('stopwords')
-# nltk.download('punkt')
-# nltk.download('wordnet')
-# nltk.download('averaged_perceptron_tagger')
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
 
 SKILLS_CSV = pd.read_csv(os.path.join(os.path.dirname(__file__), 'dummy_jd_skills.csv')) # a list of skills that are accepted by Indorama
 SKILLS = list(SKILLS_CSV.columns.values)    

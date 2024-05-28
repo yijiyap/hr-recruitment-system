@@ -1,0 +1,10 @@
+spacy
+docx2txt
+pandas
+pdfminer.six
+nltk
+flask
+PyPdf2
+flask_cors
+datetime
+werkzeug

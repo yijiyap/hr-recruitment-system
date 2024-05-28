@@ -18,6 +18,7 @@ downloads/
 eggs/
 .eggs/
 lib64/
+site-packages/
 parts/
 sdist/
 var/
@@ -26,6 +27,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+*.env
 MANIFEST
 
 # PyInstaller

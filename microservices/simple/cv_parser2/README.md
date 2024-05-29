@@ -14,7 +14,17 @@ A PDF file is a standardized file format defined by the [ISO 32000 specification
 
 While it is possible to write a custom PDF reader function following the ISO 32000 specification, it is much simpler to leverage an existing library. In this case, the resume parser uses Mozilla's open source [pdf.js](https://github.com/mozilla/pdf.js) library to first extract all the text items in the file.
 
-The table below lists the text items that are extracted from the resume PDF added. A text item contains the text content and also some metadata about the content, e.g. its x, y positions in the document, whether the font is bolded, or whether it starts a new line. (Note that x,y position is relative to the bottom left corner of the page, which is the origin 0,0)
+The table below is an example of the text items that are extracted from the resume PDF added. A text item contains the text content and also some metadata about the content, e.g. its x, y positions in the document, whether the font is bolded, or whether it starts a new line. (Note that x,y position is relative to the bottom left corner of the page, which is the origin 0,0)
+
+| # | Text Content | Metadata |
+|-------------------|-------------------------------|-------------------------------|
+| 1 | 2                        | X₁=569 X₂=576 Y=745        |
+| 2 |                        | X=266 Y=729 Bold NewLine        |
+| 3 | Leo Leopard                       | X₁=266 X₂=346 Y=729 Bold        |
+| 4 |                        | X=224 Y=714 NewLine       |
+| 5 | 555 La Verne Way,                       | X₁=224 X₂=320 Y=714        |
+| 6 | La Verne, CA                 | X₁=323 X₂=388 Y=714       |
+
 
 ## Step 2. Group text items into lines
 
@@ -61,14 +71,6 @@ Step 4 is the last step of the resume parsing process and is also the core of th
 
 The gist of the extraction engine is a feature scoring system. Each resume attribute to be extracted has a custom feature sets, where each feature set consists of a feature matching function and a feature matching score if matched (feature matching score can be a positive or negative number). To compute the final feature score of a text item for a particular resume attribute, it would run the text item through all its feature sets and sum up the matching feature scores. This process is carried out for all text items within the section, and the text item with the highest computed feature score is identified as the extracted resume attribute.
 
-As a demonstration, the table below shows 3 resume attributes in the profile section of the resume PDF added.
-
-| Resume Attribute | Text (Highest Feature Score) | Feature Scores of Other Texts |
-|-------------------|-------------------------------|-------------------------------|
-| Name              | [name]                        | [name feature scores]         |
-| Email             | [email]                       | [email feature scores]        |
-| Phone             | [phone]                       | [phone feature scores]        |
-
 In the resume PDF added, the resume attribute name is likely to be "[name]" since its feature score is [score], which is the highest feature score out of all text items in the profile section. (Some text items' feature scores can be negative, indicating they are very unlikely to be the targeted attribute)
 
 ### Feature Sets
@@ -104,3 +106,9 @@ Each resume attribute has multiple feature sets. They can be found in the source
 | Degree            | Contains a degree keyword, e.g. Associate, Bachelor, Master | -                                        |
 | GPA               | Match GPA format x.xx                                  | `/[0-4]\.\d{1,2}/`                       |
 | Date              | Contains date keyword related to year, month, seasons or the word Present | Year: `/
+
+
+### Special case: Subsections
+The last thing that is worth mentioning is subsections. For profile section, we can directly pass all the text items to the feature scoring systems. But for other sections, such as education and work experience, we have to first divide the section into subsections since there can be multiple schools or work experiences in the section. The feature scoring system then process each subsection to retrieve each's resume attributes and append the results.
+
+The resume parser applies some heuristics to detect a subsection. The main heuristic to determine a subsection is to check if the vertical line gap between 2 lines is larger than the typical line gap * 1.4, since a well formatted resume usually creates a new empty line break before adding the next subsection. There is also a fallback heuristic if the main heuristic doesn't apply to check if the text item is bolded.

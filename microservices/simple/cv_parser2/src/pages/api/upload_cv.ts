@@ -49,6 +49,7 @@ async function uploadfilePOST (req: NextApiRequest, res: NextApiResponse) {
 
       console.log(resume);
 
+      console.log(resume.workExperiences[0].descriptions)
       // Send the resume back to another endpoint
 
 

@@ -6,7 +6,7 @@ Note from Yiji: Reading the CV is one of the hardest things to do, especially wi
 
 # Resume Parser Algorithm Deep Dive
 
-For the technical curious, this section will dive into the OpenResume parser algorithm and walks through the 4 steps on how it works. (Note that the algorithm is designed to parse single column resume in English language)
+For the technical curious, this section will dive into the OpenResume parser algorithm and walks through the 4 steps on how it works.
 
 ## Step 1. Read the text items from a PDF file
 

@@ -8,3 +8,4 @@ PyPdf2
 flask_cors
 datetime
 werkzeug
+python-dotenv

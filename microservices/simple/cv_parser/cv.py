@@ -22,7 +22,9 @@ nlp = spacy.load('en_core_web_sm')
 
 @app.route("/ping", methods=["GET"])
 def ping():
-    return "pong"
+    return {
+        "msg": "pong"
+    }
 
 @app.route("/all", methods=["GET"])
 def get_all_cv():

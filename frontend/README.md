@@ -1,8 +1,75 @@
-For easier maintenance sake, this will be a very basic frontend.
+# Nuxt 3 Minimal Starter
 
-Note to the next intern: hope you enjoy building a nicer interface :p.
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-I will be using tailwindcdss so that there's no random classes and you can tell what the css class is doing just by the class name.
-I will also be using bootstrap to speed up the development.
-To prevent tailwind and bootstrap classes from clashing, I have changed the config of tailwind such that there is a need to prefix each tailwind class with "tw-". The code can be found on the `script` portion of each `.html` file.
+## Setup
 
+Make sure to install the dependencies:
+
+```bash
+# npm
+npm install
+
+# pnpm
+pnpm install
+
+# yarn
+yarn install
+
+# bun
+bun install
+```
+
+## Development Server
+
+Start the development server on `http://localhost:3000`:
+
+```bash
+# npm
+npm run dev
+
+# pnpm
+pnpm run dev
+
+# yarn
+yarn dev
+
+# bun
+bun run dev
+```
+
+## Production
+
+Build the application for production:
+
+```bash
+# npm
+npm run build
+
+# pnpm
+pnpm run build
+
+# yarn
+yarn build
+
+# bun
+bun run build
+```
+
+Locally preview production build:
+
+```bash
+# npm
+npm run preview
+
+# pnpm
+pnpm run preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

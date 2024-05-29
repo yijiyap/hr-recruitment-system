@@ -21,6 +21,16 @@ def ping():
 def get_all_demand_survey():
     return
 
+@app.route("/test-flow", methods=["POST"])
+def test_flow():
+    data = request.json
+    roleId = data["roleId"]
+    if roleId == "123":
+        return {
+            "job_description": "Job description for role 123 is ...",
+            "project_description": "Project description for role 123 is ...",
+        }
+
 @app.route("/upload", methods=["POST"])
 def upload_excel():
     """

@@ -30,11 +30,16 @@
               <li class="list-group-item">Department: {{ role.department }}</li>
               <li class="list-group-item">Supervisor: {{ role.supervisor }}</li>
               <li class="list-group-item">
-                Expected Internship Period: <br />{{ role.expectedInternshipPeriod }}
+                Expected Internship Period: <br />{{
+                  role.expectedInternshipPeriod
+                }}
               </li>
             </ul>
             <div class="card-body text-center">
-              <button @click="redirectToRoleInfo(role.roleId)" class="btn btn-secondary text-center">
+              <button
+                @click="redirectToRoleInfo(role.roleId)"
+                class="btn btn-secondary text-center"
+              >
                 Get more info
               </button>
             </div>
@@ -85,7 +90,7 @@ const rolesToHire = {
 };
 
 async function redirectToRoleInfo(roleId) {
-    console.log(roleId);
+  console.log(roleId);
   await navigateTo({
     path: "/role",
     query: {
@@ -93,5 +98,4 @@ async function redirectToRoleInfo(roleId) {
     },
   });
 }
-
 </script>

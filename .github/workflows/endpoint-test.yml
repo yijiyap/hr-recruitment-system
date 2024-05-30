@@ -1,0 +1,23 @@
+name: Endpoints Test
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Docker Compose validate
+              uses: hoverkraft-tech/compose-action@v2.0.0
+              with:
+                  compose-file: docker-compose.yml
+                  down-flags: ""
+
+            # - name: API test
+                # run: run a playwright test here

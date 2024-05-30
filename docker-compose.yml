@@ -11,6 +11,15 @@ services:
   #     - AZURE_CLIENT_ID
   #     - AZURE_CLIENT_SECRET_ID
   #     - PYTHONUNBUFFERED=1
+
+  cv_parser:
+    build:
+      context: ./microservices/simple/cv_parser
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5002:5002"
   
   demand_survey:
     build:
@@ -20,8 +29,3 @@ services:
       - PYTHONUNBUFFERED=1
     ports:
       - "5003:5003"
-
-  # cv_parser:
-  #   build:
-  #     context: ./microservices/simple/cv-parser
-  #     dockerfile: Dockerfile

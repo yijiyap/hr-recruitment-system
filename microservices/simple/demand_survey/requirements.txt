@@ -1,0 +1,6 @@
+flask
+requests
+flask_cors
+polars
+spacy
+docx2txt

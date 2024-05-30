@@ -1,11 +1,27 @@
 version: "3"
 
 services:
-  onedrive:
+  ##### BACKEND SERVICES #####
+  # onedrive:
+  #   build:
+  #     context: ./microservices/simple/onedrive
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - AZURE_TENANT_ID
+  #     - AZURE_CLIENT_ID
+  #     - AZURE_CLIENT_SECRET_ID
+  #     - PYTHONUNBUFFERED=1
+  
+  demand_survey:
     build:
-      context: ./microservices/simple/2-onedrive
+      context: ./microservices/simple/demand_survey
       dockerfile: Dockerfile
     environment:
-      - AZURE_TENANT_ID
-      - AZURE_CLIENT_ID
-      - AZURE_CLIENT_SECRET_ID
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5003:5003"
+
+  # cv_parser:
+  #   build:
+  #     context: ./microservices/simple/cv-parser
+  #     dockerfile: Dockerfile

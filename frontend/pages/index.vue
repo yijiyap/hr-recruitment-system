@@ -34,7 +34,7 @@
               </li>
             </ul>
             <div class="card-body text-center">
-              <button @click="redirectToRoleInfo" class="btn btn-secondary text-center">
+              <button @click="redirectToRoleInfo(role.roleId)" class="btn btn-secondary text-center">
                 Get more info
               </button>
             </div>
@@ -46,10 +46,6 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
 const rolesToHire = {
   role1: {
     roleId: "123",
@@ -88,8 +84,14 @@ const rolesToHire = {
   },
 };
 
-function redirectToRoleInfo(roleId) {
-    router.push({ name: "role", params: { roleId } });
+async function redirectToRoleInfo(roleId) {
+    console.log(roleId);
+  await navigateTo({
+    path: "/role",
+    query: {
+      roleId: roleId,
+    },
+  });
 }
 
 </script>

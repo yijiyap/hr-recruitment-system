@@ -58,6 +58,9 @@
         </div>
         <div>
           <div class="tw-flex tw-justify-end tw-mr-5">
+            <button v-if="isEditingRoleDescription" class="btn btn-secondary tw-mr-3" @click="cancelEdit">
+              Back to original
+            </button>
             <button class="btn btn-secondary" @click="toggleEditMode(true)">
               {{ buttonSkills }}
             </button>
@@ -118,7 +121,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, useAttrs } from "vue";
+import { onMounted, ref, useAttrs, reactive } from "vue";
 const route = useRoute();
 
 onMounted(() => {
@@ -158,9 +161,16 @@ const roleToHire = {
   },
 };
 
-async function editProjectDescription() {
-  console.log("Editing project description");
-}
+const originalRoleDescription = {
+  primaryResponsibilities: roleToHire.roleDescription.primaryResponsibilities,
+  projectDescription: roleToHire.roleDescription.projectDescription
+};
+
+async function cancelEdit() {
+  roleToHire.roleDescription.primaryResponsibilities = originalRoleDescription.primaryResponsibilities;
+  roleToHire.roleDescription.projectDescription = originalRoleDescription.projectDescription;
+  isEditingRoleDescription.value = false;
+};
 
 const isEditingRoleDescription = ref(false);
 let buttonSkills = "Edit";

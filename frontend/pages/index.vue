@@ -1,8 +1,5 @@
 <template>
   <div>
-    <h1 class="tw-text-3xl tw-font-bold tw-underline tw-text-center">
-      Indorama Ventures HR Internship Recruitment System
-    </h1>
 
     <h2 class="tw-text-2xl tw-font-bold tw-text-center tw-mt-5">
       1. Choose role to hire
@@ -15,14 +12,13 @@
 
     <!-- List of roles to hire in bootstrap cards -->
     <div class="container">
-      <div class="row gy-2">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
         <div
           v-for="(role, roleId) in rolesToHire"
           :key="roleId"
           class="col-md-3"
         >
-          <div class="card" style="width: 18rem">
-            <img src="..." class="card-img-top" alt="..." />
+          <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title">Role to hire: {{ role.roleName }}</h5>
             </div>
@@ -38,7 +34,7 @@
             <div class="card-body text-center">
               <button
                 @click="redirectToRoleInfo(role.roleId)"
-                class="btn btn-secondary text-center"
+                class="btn btn-secondary text-center stretched-link"
               >
                 Get more info
               </button>

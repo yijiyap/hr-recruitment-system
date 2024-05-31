@@ -1,9 +1,7 @@
 <template>
   <div>
 
-    <h2 class="tw-text-2xl tw-font-bold tw-text-center tw-mt-5">
-      1. Choose role to hire
-    </h2>
+    <Header headerText="1. Choose role to hire"/>
 
     <!-- Filter button at the right of the page -->
     <div class="tw-flex tw-justify-end tw-mt-5 tw-mr-5">

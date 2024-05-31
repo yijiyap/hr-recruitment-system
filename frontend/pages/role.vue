@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h2 class="tw-text-2xl tw-font-bold tw-text-center tw-mt-5">
-      2. Confirm the role information
-    </h2>
+    <Header headerText="2. Confirm the role information" />
 
     <div class="container-fluid m-3">
       <div class="row bg-light p-3 m-3">

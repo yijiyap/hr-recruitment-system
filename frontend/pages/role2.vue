@@ -25,7 +25,16 @@
             </div>
 
             <SectionRole v-for="section in roleToHire.sections" :key="section" :sectionTitle="section.sectionTitle"
-                :subsections="section.subsections" />
+                :subsections="section.subsections" @cancelEdit="backToOriginal" />
+
+            <div class="row">
+                <div class="tw-flex tw-justify-center mt-3">
+                    <button class="btn btn-secondary">
+                        <NuxtLink to="/shortlistedCVs" style="text-decoration: none; color: inherit">Get relevant CVs
+                        </NuxtLink>
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -91,4 +100,12 @@ const roleToHire = ref({
         },
     }
 });
+
+const original = JSON.parse(JSON.stringify(roleToHire.value));
+
+function backToOriginal() {
+    roleToHire.value = JSON.parse(JSON.stringify(original));
+}
+
+
 </script>

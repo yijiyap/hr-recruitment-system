@@ -23,7 +23,7 @@
     </div>
     <div>
       <div class="tw-flex tw-justify-end tw-mr-5">
-        <button v-if="isEditingSubsection" class="btn btn-secondary tw-mr-3" @click="cancelEdit">
+        <button v-if="isEditingSubsection" class="btn btn-secondary tw-mr-3" @click="$emit('cancelEdit')">
           Back to original
         </button>
         <button class="btn btn-secondary" @click="toggleEditMode">
@@ -48,11 +48,6 @@ const reactiveSubsections = reactive([...props.subsections]);
 // Keep a deep copy of the original subsections to revert changes
 let originalSubsections = JSON.parse(JSON.stringify(props.subsections));
 
-watch(() => props.subsections, (newVal) => {
-  // Update originalSubsections whenever subsections prop changes
-  originalSubsections = JSON.parse(JSON.stringify(newVal));
-}, { deep: true });
-
 let toggleEditButton = "Edit";
 
 const isEditingSubsection = ref(false);
@@ -62,12 +57,12 @@ function toggleEditMode() {
   toggleEditButton = isEditingSubsection.value? "Save" : "Edit";
 }
 
-function cancelEdit() {
-  // Revert to the original subsections does not work
-  reactiveSubsections.splice(0, reactiveSubsections.length,...originalSubsections);
-  isEditingSubsection.value = false;
-  toggleEditButton = "Edit";
-}
+// function cancelEdit() {
+//   // Revert to the original subsections does not work
+//   reactiveSubsections.splice(0, reactiveSubsections.length,...originalSubsections);
+//   isEditingSubsection.value = false;
+//   toggleEditButton = "Edit";
+// }
 </script>
 
 <style scoped>

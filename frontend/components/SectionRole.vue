@@ -6,7 +6,7 @@
       </h3>
 
       <div v-if="!isEditingSubsection">
-        <div v-for="subsection in subsections" :key="subsection">
+        <div v-for="subsection in reactiveSubsections" :key="subsection">
           <h4 class="tw-text-lg tw-font-bold">{{ subsection.subsectionTitle }}</h4>
           <p>
             {{ subsection.subsectionText }}
@@ -15,7 +15,7 @@
       </div>
 
       <div v-else>
-        <div v-for="subsection in subsections" :key="subsection">
+        <div v-for="subsection in reactiveSubsections" :key="subsection">
           <h4 class="tw-text-lg tw-font-bold">{{ subsection.subsectionTitle }}</h4>
           <textarea v-model="subsection.subsectionText" />
         </div>
@@ -35,36 +35,39 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive, watch } from 'vue';
 
 const props = defineProps({
   sectionTitle: String,
   subsections: Array,
 });
 
+// Initialize reactiveSubsections with the current prop value
+const reactiveSubsections = reactive([...props.subsections]);
+
+// Keep a deep copy of the original subsections to revert changes
+let originalSubsections = JSON.parse(JSON.stringify(props.subsections));
+
+watch(() => props.subsections, (newVal) => {
+  // Update originalSubsections whenever subsections prop changes
+  originalSubsections = JSON.parse(JSON.stringify(newVal));
+}, { deep: true });
+
 let toggleEditButton = "Edit";
 
 const isEditingSubsection = ref(false);
 
-async function toggleEditMode() {
-  if (!isEditingSubsection.value) {
-    isEditingSubsection.value = true;
-    toggleEditButton = "Save";
-  } else {
-    // Save changes
-    isEditingSubsection.value = false;
-    toggleEditButton = "Edit";
-  }
-  return toggleEditButton;
+function toggleEditMode() {
+  isEditingSubsection.value =!isEditingSubsection.value;
+  toggleEditButton = isEditingSubsection.value? "Save" : "Edit";
 }
 
-const originalSubsections = props.subsections;
-
-const cancelEdit = () => {
-  props.subsections = originalSubsections;
+function cancelEdit() {
+  // Revert to the original subsections does not work
+  reactiveSubsections.splice(0, reactiveSubsections.length,...originalSubsections);
   isEditingSubsection.value = false;
-};
-
+  toggleEditButton = "Edit";
+}
 </script>
 
 <style scoped>

@@ -16,8 +16,6 @@ services:
     build:
       context: ./microservices/simple/cv_parser
       dockerfile: Dockerfile
-    environment:
-      - PYTHONUNBUFFERED=1
     ports:
       - "5002:5002"
   
@@ -29,3 +27,12 @@ services:
       - PYTHONUNBUFFERED=1
     ports:
       - "5003:5003"
+
+  shortlist:
+    build:
+      context: ./microservices/complex/shortlist
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "9001:9001"

@@ -1,5 +1,5 @@
 <template>
-  <div class="row bg-light p-3 m-3">
+  <div class="row bg-light p-3 my-3">
     <div class="col">
       <h3 class="tw-text-xl tw-font-bold tw-text-center">
         {{ sectionTitle }}

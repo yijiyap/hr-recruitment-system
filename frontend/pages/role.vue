@@ -2,8 +2,8 @@
     <div>
         <Header headerText="2. Confirm the role information" />
 
-        <div class="container-fluid m-3">
-            <div class="row bg-light p-3 m-3">
+        <div class="container-fluid my-3">
+            <div class="row bg-light p-3 my-3">
                 <div class="col text-center">
                     <h3 class="tw-text-xl tw-font-bold tw-text-center">
                         Supervisor details
@@ -36,7 +36,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 

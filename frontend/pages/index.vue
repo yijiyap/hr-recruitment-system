@@ -1,21 +1,17 @@
 <template>
   <div>
 
-    <Header headerText="1. Choose role to hire"/>
+    <Header headerText="1. Choose role to hire" />
 
-    <!-- Sort by button at the right of the page -->
-    <div class="tw-flex tw-justify-end tw-mt-5 tw-mr-5">
-      <button class="btn btn-secondary">Sort by</button>
-    </div>
+    <FloatLabel class="">
+        <Dropdown v-model="selectedFilter" inputId="dd-filters" :options="filters" optionLabel="name" class="w-full" />
+        <label for="dd-filters">Sort by</label>
+    </FloatLabel>    
 
     <!-- List of roles to hire in bootstrap cards -->
     <div class="container">
       <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div
-          v-for="(role, roleId) in rolesToHire"
-          :key="roleId"
-          class="col-md-3"
-        >
+        <div v-for="(role, roleId) in filteredRoles" :key="roleId" class="col-md-3">
           <div class="card h-100">
             <div class="card-body">
               <h5 class="card-title">Role to hire: {{ role.roleName }}</h5>
@@ -30,10 +26,7 @@
               </li>
             </ul>
             <div class="card-body text-center">
-              <button
-                @click="redirectToRoleInfo(role.roleId)"
-                class="btn btn-secondary text-center stretched-link"
-              >
+              <button @click="redirectToRoleInfo(role.roleId)" class="btn btn-secondary text-center stretched-link">
                 Get more info
               </button>
             </div>
@@ -75,10 +68,24 @@ const rolesToHire = {
     expectedInternshipPeriod: "May 2025 - August 2025",
   },
   role5: {
-    roleId: "126",
+    roleId: "127",
     roleName: "HR Intern",
     department: "HRHO",
     supervisor: "Pao",
+    expectedInternshipPeriod: "May 2025 - August 2025",
+  },
+  role6: {
+    roleId: "128",
+    roleName: "HR Intern",
+    department: "HRHO",
+    supervisor: "Oom",
+    expectedInternshipPeriod: "May 2025 - August 2025",
+  },
+  role7: {
+    roleId: "129",
+    roleName: "HR Intern",
+    department: "HRHO",
+    supervisor: "Susie",
     expectedInternshipPeriod: "May 2025 - August 2025",
   },
 };
@@ -92,4 +99,24 @@ async function redirectToRoleInfo(roleId) {
     },
   });
 }
+
+const filters = [
+  { name: "Department", value: "department" },
+  { name: "Expected Internship Period", value: "expectedInternshipPeriod" },
+];
+
+let selectedFilter = ref(filters[0]);
+const rolesArray = Object.values(rolesToHire);
+const filteredRoles = computed(() => {
+  return rolesArray.sort((a, b) => {
+    if (selectedFilter.value.value === "department") {
+      return a.department.localeCompare(b.department);
+    } else if (selectedFilter.value.value === "expectedInternshipPeriod") {
+      return a.expectedInternshipPeriod.localeCompare(b.expectedInternshipPeriod);
+    }
+  });
+});
+
+
+
 </script>

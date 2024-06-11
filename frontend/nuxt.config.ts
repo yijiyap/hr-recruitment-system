@@ -4,8 +4,14 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/main.css',
     'bootstrap/dist/css/bootstrap.css',
+    'primevue/resources/themes/aura-light-noir/theme.css',
   ],
-  modules: [],
+  modules: [
+    'nuxt-primevue'
+  ],
+  primevue: {
+    /* Options */
+  },
   postcss: {
     plugins: {
       tailwindcss: {},

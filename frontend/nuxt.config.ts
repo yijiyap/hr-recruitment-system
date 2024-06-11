@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/main.css',
     'bootstrap/dist/css/bootstrap.css',
-    'primevue/resources/themes/aura-light-noir/theme.css',
+    'primevue/resources/themes/aura-light-green/theme.css'
   ],
   modules: [
     'nuxt-primevue'

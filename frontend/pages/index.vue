@@ -3,13 +3,13 @@
 
     <Header headerText="1. Choose role to hire" />
 
-    <FloatLabel class="">
-        <Dropdown v-model="selectedFilter" inputId="dd-filters" :options="filters" optionLabel="name" class="w-full" />
-        <label for="dd-filters">Sort by</label>
-    </FloatLabel>    
-
     <!-- List of roles to hire in bootstrap cards -->
     <div class="container">
+      <div class="row tw-mb-5">
+        <label for="dd-filters">Sort by</label>
+          <Dropdown v-model="selectedFilter" inputId="dd-filters" :options="filters" optionLabel="name"
+            class="w-full" />
+      </div>
       <div class="row row-cols-1 row-cols-md-3 g-4">
         <div v-for="(role, roleId) in filteredRoles" :key="roleId" class="col-md-3">
           <div class="card h-100">
@@ -25,8 +25,8 @@
                 }}
               </li>
             </ul>
-            <div class="card-body text-center">
-              <button @click="redirectToRoleInfo(role.roleId)" class="btn btn-secondary text-center stretched-link">
+            <div class="card-footer text-center">
+              <button @click="redirectToRoleInfo(role.roleId)" class="btn btn-secondary text-center stretched-link w-100">
                 Get more info
               </button>
             </div>
@@ -44,49 +44,49 @@ const rolesToHire = {
     roleName: "HR Intern",
     department: "HRHO",
     supervisor: "Uklit",
-    expectedInternshipPeriod: "May 2025 - August 2025",
+    expectedInternshipPeriod: "First half of the year",
   },
   role2: {
     roleId: "124",
     roleName: "HR Intern",
     department: "HRHO",
     supervisor: "Natnisha",
-    expectedInternshipPeriod: "May 2025 - August 2025",
+    expectedInternshipPeriod: "First half of the year",
   },
   role3: {
     roleId: "125",
     roleName: "HR Intern",
     department: "HRHO",
     supervisor: "Amy",
-    expectedInternshipPeriod: "May 2025 - August 2025",
+    expectedInternshipPeriod: "First half of the year",
   },
   role4: {
     roleId: "126",
     roleName: "HR Intern",
     department: "HRHO",
     supervisor: "Patchy",
-    expectedInternshipPeriod: "May 2025 - August 2025",
+    expectedInternshipPeriod: "Summer Break",
   },
   role5: {
     roleId: "127",
     roleName: "HR Intern",
     department: "HRHO",
     supervisor: "Pao",
-    expectedInternshipPeriod: "May 2025 - August 2025",
+    expectedInternshipPeriod: "Summer Break",
   },
   role6: {
     roleId: "128",
-    roleName: "HR Intern",
-    department: "HRHO",
-    supervisor: "Oom",
-    expectedInternshipPeriod: "May 2025 - August 2025",
+    roleName: "Digital Intern",
+    department: "Digital",
+    supervisor: "Tap",
+    expectedInternshipPeriod: "Second half of the year",
   },
   role7: {
     roleId: "129",
-    roleName: "HR Intern",
-    department: "HRHO",
-    supervisor: "Susie",
-    expectedInternshipPeriod: "May 2025 - August 2025",
+    roleName: "Digital Intern",
+    department: "Digital",
+    supervisor: "Mat",
+    expectedInternshipPeriod: "Second half of the year",
   },
 };
 
@@ -107,16 +107,54 @@ const filters = [
 
 let selectedFilter = ref(filters[0]);
 const rolesArray = Object.values(rolesToHire);
+
+const periodToNumber = {
+  "First half of the year": 1,
+  "Summer Break": 2,
+  "Second half of the year": 3,
+};
+
 const filteredRoles = computed(() => {
   return rolesArray.sort((a, b) => {
     if (selectedFilter.value.value === "department") {
       return a.department.localeCompare(b.department);
     } else if (selectedFilter.value.value === "expectedInternshipPeriod") {
-      return a.expectedInternshipPeriod.localeCompare(b.expectedInternshipPeriod);
+      return periodToNumber[a.expectedInternshipPeriod] - periodToNumber[b.expectedInternshipPeriod];
     }
   });
-});
+})
 
+/* 
+  Filter for when the internship period is in "Day Month Year" string format
+  If the selected filter is department, sort the roles based on department
+  If the selected filter is expectedInternshipPeriod, sort the roles based on the expectedInternshipPeriod
+*/
+// const filteredRoles = computed(() => {
+//   return rolesArray.sort((a, b) => {
+//     if (selectedFilter.value.value === "department") {
+//       return a.department.localeCompare(b.department);
+//     } else if (selectedFilter.value.value === "expectedInternshipPeriod") {
 
+//       // convert the expectedInternshipPeriod to a date
+//       const [dayStartA, monthStartA, yearStartA, endA] = a.expectedInternshipPeriod.split(" ");
+//       const [dayStartB, monthStartB, yearStartB, endB] = b.expectedInternshipPeriod.split(" ");
+
+//       const monthNames = ["January", "February", "March", "April", "May", "June",
+//         "July", "August", "September", "October", "November", "December"
+//       ];
+//       const monthNumberA = monthNames.indexOf(monthStartA);
+//       const monthNumberB = monthNames.indexOf(monthStartB);
+
+//       // compare year, month, day
+//       if (yearStartA !== yearStartB) {
+//         return yearStartA - yearStartB;
+//       } else if (monthNumberA !== monthNumberB) {
+//         return monthNumberA - monthNumberB;
+//       } else {
+//         return dayStartA - dayStartB;
+//       }
+//     }
+//   });
+// });
 
 </script>

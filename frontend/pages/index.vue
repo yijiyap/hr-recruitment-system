@@ -3,9 +3,9 @@
 
     <Header headerText="1. Choose role to hire"/>
 
-    <!-- Filter button at the right of the page -->
+    <!-- Sort by button at the right of the page -->
     <div class="tw-flex tw-justify-end tw-mt-5 tw-mr-5">
-      <button class="btn btn-secondary">Filter</button>
+      <button class="btn btn-secondary">Sort by</button>
     </div>
 
     <!-- List of roles to hire in bootstrap cards -->

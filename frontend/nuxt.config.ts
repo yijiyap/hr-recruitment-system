@@ -1,6 +1,20 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  plugins: [
+    {
+      src: '~/plugins/msal.ts',
+      mode: 'client'
+    }
+  ],
+  runtimeConfig: {
+    public: {
+      clientId: process.env.CLIENT_ID,
+      authority: process.env.AUTHORITY,
+      redirectUri: process.env.REDIRECT_URI,
+      postLogoutRedirectUri: process.env.POST_LOGOUT_REDIRECT_URI
+    }
+  },
   css: [
     '~/assets/css/main.css',
     'bootstrap/dist/css/bootstrap.css',

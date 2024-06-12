@@ -17,10 +17,11 @@ def ping():
 @app.route("/consolidate", methods=["GET"])
 def consolidate():
     # consolidate the following candidate info:
-    #   - Link to CV
+    #   - CV Info
     #   - Job Application info
     #   - English test score
     # and send it to the filtering microservice
     candidate_id = request.args.get("candidate_id")
     
-    # get the link to the CV
+    # get the CV info
+    cv_info = requests.get(f"http://localhost:5002/api/cv_info/{candidate_id}").json()

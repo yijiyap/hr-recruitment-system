@@ -19,3 +19,4 @@ The data is automatically pulled from SharePoint, so I pray it does not break
 
 ## Disclaimer
 Because we have no access to any AI models (privacy and time limitations), we are limited to keyword-based filtering.
+ 

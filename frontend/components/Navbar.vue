@@ -1,10 +1,8 @@
 <template>
-  <nav
-    :class="[
-      'navbar sticky-top navbar-expand-lg bg-body-tertiary p-4',
-      { 'scrolled': !view.atTopOfPage },
-    ]"
-  >
+  <nav :class="[
+    'navbar sticky-top navbar-expand-lg bg-body-tertiary p-4',
+    { 'scrolled': !view.atTopOfPage },
+  ]">
     <div class="container-fluid">
       <NuxtLink to="/">
         <img src="/ivl_logo.png" alt="IVL Logo" width="80%" />
@@ -12,37 +10,24 @@
       <h1 class="tw-text-2xl tw-font-bold tw-text-center mt-2">
         Internship Recruitment System
       </h1>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNavDropdown"
-        aria-controls="navbarNavDropdown"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+        aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#"
-              ><NuxtLink to="/demand" style="text-decoration: none; color: inherit"
-                >Hire an intern</NuxtLink
-              ></a
-            >
+            <a class="nav-link active" aria-current="page">
+              <NuxtLink to="/demand" style="text-decoration: none; color: inherit">Hire an intern</NuxtLink>
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"
-              ><NuxtLink
-                to="/parents"
-                style="text-decoration: none; color: inherit"
-                >Hire a child</NuxtLink
-              ></a
-            >
+            <a class="nav-link">
+              <NuxtLink to="/parents" style="text-decoration: none; color: inherit">Hire a child</NuxtLink>
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Donation</a>
+            <a class="nav-link">Donation</a>
           </li>
         </ul>
       </div>
@@ -51,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { onBeforeMount, onUnmounted } from 'vue';
 
 // Define reactive property for tracking scroll state
 const view = reactive({
@@ -64,7 +49,7 @@ const handleScroll = () => {
 };
 
 // Add scroll event listener on mount and remove it on unmount
-onMounted(() => {
+onBeforeMount(() => {
   window.addEventListener('scroll', handleScroll);
 });
 

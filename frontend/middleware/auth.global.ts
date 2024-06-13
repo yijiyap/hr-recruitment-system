@@ -1,5 +1,5 @@
 import {useMSAuth} from "~/composables/useMSAuth";
-import {useAppUser} from "~/composables/useAppUser";
+import {useAppUser} from "#imports";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (process.server) return;
@@ -21,10 +21,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     userStore.value.user = user;
   }
   if (to.name !== "login" && !isAuthenticated) {
-    console.log("Redirecting to login");
     return navigateTo("/login", { replace: true });
   } else if (to.name === "login" && isAuthenticated) {
-    console.log("You have been authenticated");
     return navigateTo("/", { replace: true });
   } else {
     return;

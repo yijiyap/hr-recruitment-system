@@ -1,10 +1,12 @@
-import { BrowserCacheLocation, EventType, PublicClientApplication } from "@azure/msal-browser";
-import * as msal from "@azure/msal-browser";
+import {BrowserCacheLocation, EventType, PublicClientApplication} from "@azure/msal-browser";
+
 
 let tokenExpirationTimer: any;
 
 export const useMSAuth = () => {
+
     const config = useRuntimeConfig();
+
     const msalConfig = {
         auth: {
             clientId: config.public.clientId,
@@ -16,56 +18,60 @@ export const useMSAuth = () => {
         cache: {
             cacheLocation: BrowserCacheLocation.LocalStorage,
             storeAuthStateInCookie: true,
-        }
+        },
+        system: {
+            tokenRenewalOffsetSeconds: 300,
+        },
     };
 
-    let msalInstance = new PublicClientApplication(msalConfig);
-    console.log("MSAL instance created", msalInstance.controller.initialized);
+    let msalInstance = useState('msalInstance',
+        () => new PublicClientApplication(msalConfig)
+    );
 
-    // Initialize MSAL instance
     async function initialize() {
-        await msalInstance.initialize();
+        await msalInstance.value.initialize();
 
-        await msalInstance.handleRedirectPromise().then((response) => { // check for redirect response
-                if (response) {
-                    handleResponse(response);
-                }
-            }).catch(error => {
-                console.log(error);
-            })
-        
+        // Handle redirect promise after login or redirect
+        await msalInstance.value
+            .handleRedirectPromise() // Handles the redirect promise and obtains the response
+            .then(handleResponse)
+            .catch((err) => {
+                throw new Error(err);
+            });
 
-        msalInstance.addEventCallback((event) => {
-            if (event.eventType === EventType.LOGIN_SUCCESS) { // handle login success event
+        // Add event callback for login success
+        msalInstance.value.addEventCallback((event) => {
+            if (event.eventType === EventType.LOGIN_SUCCESS) {
                 setupTokenExpirationTimer();
             }
         });
+
     }
 
-    // Handle response from redirect
-    function handleResponse(response: any) {
-        if (response?.account) {
+    // Handle the response after login or redirect
+    function handleResponse(resp: any) {
+        if (resp?.account) {
             setupTokenExpirationTimer();
         } else {
-            console.log("huh?");
+            console.log("LOGIN");
         }
     }
 
     // Set up timer for refreshing access token upon expiration
-    function setupTokenExpirationTimer() { 
-        const accounts = msalInstance.getAllAccounts();
+    function setupTokenExpirationTimer() {
+        const accounts = msalInstance.value.getAllAccounts();
         if (accounts.length > 0) {
-            const account = accounts[0]; // if multiple accounts are supported, this should be handled differently
-            if (account.idTokenClaims && account.idTokenClaims.exp) { // check if token has expiration time
+            const account = accounts[0];
+            if (account.idTokenClaims && account.idTokenClaims.exp) {
                 const tokenExpirationTime = account.idTokenClaims.exp * 1000;
-                const currentTime = Date.now()
+                const currentTime = Date.now();
                 const timeUntilExpiration = tokenExpirationTime - currentTime;
 
-                clearTimeout(tokenExpirationTimer); // clear existing timer if it exists
+                clearTimeout(tokenExpirationTimer);
 
-                tokenExpirationTimer = setTimeout(() => { // set new timer
+                tokenExpirationTimer = setTimeout(() => {
                     refreshAccessToken(account);
-                }, timeUntilExpiration)
+                }, timeUntilExpiration);
             }
         }
     }
@@ -73,56 +79,55 @@ export const useMSAuth = () => {
     // Refresh access token
     async function refreshAccessToken(account: any) {
         try {
-            const response = await msalInstance.acquireTokenSilent({
-                account: account,
+            const response = await msalInstance.value.acquireTokenSilent({
+                account,
                 scopes: ["User.Read"],
             });
-            console.log("Access token refreshed", response.accessToken);
+            console.log("Refreshed Access Token:", response.accessToken);
             setupTokenExpirationTimer();
-        } catch (error) {
-            console.log("Error refreshing access token", error);
-            // sign out maybe?
-        } 
-    }
-
-    // sign in with redirect
-    async function signIn() {
-        try {
-            await msalInstance.loginRedirect(
-                {
-                    scopes: ["User.Read"],
-                }
-            );
-        } catch (error) {
-            console.error("Error signing in", error);
+        } catch (err) {
+            console.error("Token refresh error:", err);
+            //signOut(account.homeAccountId);
         }
     }
 
-    // acquire access token silently. This is used to authenticate requests to the API
+    const loginRequest = {
+        scopes: ["User.Read"],
+    };
+
+    // Sign in with redirect
+    async function signIn() {
+        try {
+            await msalInstance.value.loginRedirect(loginRequest);
+        } catch (err) {
+            console.log("Login error:", err);
+        }
+    }
+
+    // Acquire access token silently
     async function acquireTokenSilent() {
-        const accounts = msalInstance.getAllAccounts();
+        const accounts = msalInstance.value.getAllAccounts();
         if (accounts.length > 0) {
-            const account = accounts[0]; // if multiple accounts are supported, this should be handled differently
-            msalInstance.setActiveAccount(account); // set active account
+            const account = accounts[0];
+            msalInstance.value.setActiveAccount(account);
             try {
-                const response = await msalInstance.acquireTokenSilent({ // silent because we are not prompting the user
-                    account: account,
+                const response = await msalInstance.value.acquireTokenSilent({
+                    account,
                     scopes: ["User.Read"],
                 });
                 return response.accessToken;
-            } catch (error) {
-                console.log("Error acquiring token silently", error);
+            } catch (err) {
                 return null;
             }
         } else {
-            console.log("No accounts found");
+            console.error("No accounts found");
             return null;
         }
     }
 
     // Get all MSAL accounts
     function getAccounts() {
-        return msalInstance.getAllAccounts();
+        return msalInstance.value.getAllAccounts();
     }
 
     // Check if user is authenticated
@@ -130,17 +135,21 @@ export const useMSAuth = () => {
         return getAccounts().length > 0;
     }
 
-    // Sign out
+    // Sign out user
     function signOut(accountId: string) {
-        const account = accountId ? msalInstance.getAccountByHomeId(accountId) : null;
-
+        const account = accountId
+            ? msalInstance.value.getAccountByHomeId(accountId)
+            : null;
         if (account) {
-            msalInstance.logoutRedirect({account: account});
+            msalInstance.value.logoutRedirect({
+                account,
+            });
             localStorage.clear();
         } else {
-            console.log("No account found")
+            console.error("Account not found");
         }
     }
+
 
     return {
         initialize,
@@ -151,4 +160,5 @@ export const useMSAuth = () => {
         isAuthenticated,
         signOut,
     }
+
 }

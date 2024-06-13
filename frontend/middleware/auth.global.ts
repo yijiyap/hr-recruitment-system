@@ -1,12 +1,12 @@
-import {useMSAuth} from "~/auth/useMSAuth";
-import {useAppUser} from "~/auth/useAppUser";
+import {useMSAuth} from "~/composables/useMSAuth";
+import {useAppUser} from "~/composables/useAppUser";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (process.server) return;
   if (to.name === "/login") return;
 
   const msAuth = useMSAuth();
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 //   const accounts = msAuth.getAccounts();
 //   const userStore = useAppUser();
 //   const accessToken = await msAuth.acquireTokenSilent();
@@ -22,8 +22,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 //     userStore.value.user = user;
 //   }
   if (to.name !== "login" && !isAuthenticated) {
+    console.log("Redirecting to login");
     return navigateTo("/login", { replace: true });
   } else if (to.name === "login" && isAuthenticated) {
+    console.log("You have been authenticated");
     return navigateTo("/", { replace: true });
   } else {
     return;

@@ -1,4 +1,4 @@
-import {useMSAuth} from "~/auth/useMSAuth";
+import {useMSAuth} from "~/composables/useMSAuth";
 
 export default defineNuxtPlugin(async ({ $config }) => {
   const msAuth = useMSAuth();

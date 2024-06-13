@@ -30,7 +30,7 @@
 </template>
   
 <script setup>
-import {useMSAuth} from "~/auth/useMSAuth";
+import {useMSAuth} from "~/composables/useMSAuth";
 
 const msAuth = useMSAuth();
 

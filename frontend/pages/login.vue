@@ -35,6 +35,6 @@ import {useMSAuth} from "~/composables/useMSAuth";
 const msAuth = useMSAuth();
 
 async function login() {
-    // await msAuth.signIn()
+    await msAuth.signIn()
 }
 </script>

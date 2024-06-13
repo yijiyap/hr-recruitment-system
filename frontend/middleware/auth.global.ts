@@ -6,21 +6,20 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (to.name === "/login") return;
 
   const msAuth = useMSAuth();
-  const isAuthenticated = false;
-//   const accounts = msAuth.getAccounts();
-//   const userStore = useAppUser();
-//   const accessToken = await msAuth.acquireTokenSilent();
-//   let isAuthenticated = msAuth.isAuthenticated() && accessToken;
+  const accounts = msAuth.getAccounts();
+  const userStore = useAppUser();
+  const accessToken = await msAuth.acquireTokenSilent();
+  let isAuthenticated = msAuth.isAuthenticated() && accessToken;
 
-//   if (isAuthenticated) {
-//     const user = {
-//       ...accounts[0],
-//       bearerToken: accessToken,
-//     };
+  if (isAuthenticated) {
+    const user = {
+      ...accounts[0],
+      bearerToken: accessToken,
+    };
 
-//     localStorage.setItem("user", JSON.stringify(user));
-//     userStore.value.user = user;
-//   }
+    localStorage.setItem("user", JSON.stringify(user));
+    userStore.value.user = user;
+  }
   if (to.name !== "login" && !isAuthenticated) {
     console.log("Redirecting to login");
     return navigateTo("/login", { replace: true });

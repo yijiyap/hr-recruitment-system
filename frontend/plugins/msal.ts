@@ -2,7 +2,14 @@ import {useMSAuth} from "~/composables/useMSAuth";
 
 export default defineNuxtPlugin(async ({ $config }) => {
   const msAuth = useMSAuth();
-  await msAuth.initialize();
+
+  try {
+    await msAuth.initialize();
+    // Logging for debugging
+    console.log('MSAL instance initialized')
+  } catch (error) {
+    console.error(error);
+  }
 
   return {};
 });

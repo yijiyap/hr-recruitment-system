@@ -17,19 +17,20 @@ export const useMSAuth = () => {
         }
     };
 
-    const msalInstance = new PublicClientApplication(msalConfig);
+    let msalInstance = new PublicClientApplication(msalConfig);
 
     // Initialize MSAL instance
     async function initialize() {
-        await msalInstance.initialize().then(() => { 
-            msalInstance.handleRedirectPromise().then((response) => { // check for redirect response
+        await msalInstance.initialize();
+
+        await msalInstance.handleRedirectPromise().then((response) => { // check for redirect response
                 if (response) {
                     handleResponse(response);
                 }
             }).catch(error => {
                 console.log(error);
             })
-        });
+        
 
         msalInstance.addEventCallback((event) => {
             if (event.eventType === EventType.LOGIN_SUCCESS) { // handle login success event

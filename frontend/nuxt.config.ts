@@ -1,12 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-  plugins: [
-    {
-      src: '~/plugins/msal.ts',
-      mode: 'client'
-    }
-  ],
   runtimeConfig: {
     public: {
       clientId: process.env.CLIENT_ID,

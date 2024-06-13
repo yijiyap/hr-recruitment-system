@@ -20,7 +20,7 @@ export const useMSAuth = () => {
     };
 
     let msalInstance = new PublicClientApplication(msalConfig);
-    console.log("MSAL instance created", msalInstance);
+    console.log("MSAL instance created", msalInstance.controller.initialized);
 
     // Initialize MSAL instance
     async function initialize() {

@@ -2,7 +2,6 @@ import { BrowserCacheLocation, EventType, PublicClientApplication } from "@azure
 import * as msal from "@azure/msal-browser";
 
 let tokenExpirationTimer: any;
-let accountId: any;
 
 export const useMSAuth = () => {
     const config = useRuntimeConfig();
@@ -10,6 +9,9 @@ export const useMSAuth = () => {
         auth: {
             clientId: config.public.clientId,
             authority: config.public.authority,
+            redirectUri: config.public.redirectUri,
+            postLogoutRedirectUri: config.public.postLogoutRedirectUri,
+            navigateToLoginRequestUrl: true,
         },
         cache: {
             cacheLocation: BrowserCacheLocation.LocalStorage,
@@ -18,6 +20,7 @@ export const useMSAuth = () => {
     };
 
     let msalInstance = new PublicClientApplication(msalConfig);
+    console.log("MSAL instance created", msalInstance);
 
     // Initialize MSAL instance
     async function initialize() {
@@ -91,7 +94,7 @@ export const useMSAuth = () => {
                 }
             );
         } catch (error) {
-            console.log("Error signing in", error);
+            console.error("Error signing in", error);
         }
     }
 

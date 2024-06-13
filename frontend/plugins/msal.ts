@@ -6,7 +6,7 @@ export default defineNuxtPlugin(async ({ $config }) => {
   try {
     await msAuth.initialize();
     // Logging for debugging
-    console.log('MSAL instance initialized')
+    console.log('MSAL instance initialized in plugin')
   } catch (error) {
     console.error(error);
   }

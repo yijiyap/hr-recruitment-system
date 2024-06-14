@@ -24,7 +24,7 @@ export const useMSAuth = () => {
         },
     };
 
-    let msalInstance = useState('msalInstance',
+    const msalInstance = useState('msalInstance',
         () => new PublicClientApplication(msalConfig)
     );
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header headerText="Shortlisted CVs" />
+        <Header header-text="Shortlisted CVs" />
 
         <div class="container-fluid my-3">
             <div class="row bg-light p-3 my-3">
@@ -8,19 +8,19 @@
                     <h3 class="tw-text-xl tw-font-bold tw-text-center">
                         Supervisor details
                     </h3>
-                    Department: {{ roleToHire.supervisorDetails.department }} <br />
-                    Supervisor: {{ roleToHire.supervisorDetails.supervisor }} <br />
+                    Department: {{ roleToHire.supervisorDetails.department }} <br >
+                    Supervisor: {{ roleToHire.supervisorDetails.supervisor }} <br >
                     Supervisor email: {{ roleToHire.supervisorDetails.supervisorEmail }}
-                    <br />
+                    <br >
                 </div>
                 <div class="col text-center">
                     <h3 class="tw-text-xl tw-font-bold tw-text-center">
                         Internship Role Details
                     </h3>
                     Role {{ roleToHire.internshipRoleDetails.roleId }}:
-                    {{ roleToHire.internshipRoleDetails.roleName }}<br />
+                    {{ roleToHire.internshipRoleDetails.roleName }}<br >
                     Internship Period:
-                    {{ roleToHire.internshipRoleDetails.internshipPeriod }} <br />
+                    {{ roleToHire.internshipRoleDetails.internshipPeriod }} <br >
                 </div>
             </div>
 
@@ -30,8 +30,8 @@
                         <div class="card-body">
                             <h5 class="card-title text-center">{{ candidate.candidateName }}</h5>
                             <div class="text-center my-3">
-                                <span>Course of Study: {{ candidate.courseOfStudy }}</span><br/>
-                                <span :class="getMatchColor(candidate.matchPercent)">{{ candidate.matchPercent }}% match</span><br/>
+                                <span>Course of Study: {{ candidate.courseOfStudy }}</span><br>
+                                <span :class="getMatchColor(candidate.matchPercent)">{{ candidate.matchPercent }}% match</span><br>
                                 <span>English Score: {{ candidate.candidateEnglishScore }}</span>
                             </div>
                             <div class="card-text text-body-secondary text-center my-2">

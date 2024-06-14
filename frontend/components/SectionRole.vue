@@ -46,7 +46,7 @@ const props = defineProps({
 const reactiveSubsections = reactive([...props.subsections]);
 
 // Keep a deep copy of the original subsections to revert changes
-let originalSubsections = JSON.parse(JSON.stringify(props.subsections));
+const originalSubsections = JSON.parse(JSON.stringify(props.subsections));
 
 let toggleEditButton = "Edit";
 

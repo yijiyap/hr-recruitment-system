@@ -1,20 +1,22 @@
 <template>
-  <nav :class="[
+  <nav
+:class="[
     'navbar sticky-top navbar-expand-lg bg-body-tertiary p-4',
     { 'scrolled': !view.atTopOfPage },
   ]">
     <div class="container-fluid">
       <NuxtLink to="/">
-        <img src="/ivl_logo.png" alt="IVL Logo" width="80%" />
+        <img src="/ivl_logo.png" alt="IVL Logo" width="80%" >
       </NuxtLink>
       <h1 class="tw-text-2xl tw-font-bold tw-text-center mt-2">
         Internship Recruitment System
       </h1>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      <button
+class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
         aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"/>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <div id="navbarNavDropdown" class="collapse navbar-collapse">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page">

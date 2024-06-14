@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header headerText="2. Confirm the role information" />
+        <Header header-text="2. Confirm the role information" />
 
         <div class="container-fluid my-3">
             <div class="row bg-light p-3 my-3">
@@ -8,24 +8,25 @@
                     <h3 class="tw-text-xl tw-font-bold tw-text-center">
                         Supervisor details
                     </h3>
-                    Department: {{ roleToHire.supervisorDetails.department }} <br />
-                    Supervisor: {{ roleToHire.supervisorDetails.supervisor }} <br />
+                    Department: {{ roleToHire.supervisorDetails.department }} <br >
+                    Supervisor: {{ roleToHire.supervisorDetails.supervisor }} <br >
                     Supervisor email: {{ roleToHire.supervisorDetails.supervisorEmail }}
-                    <br />
+                    <br >
                 </div>
                 <div class="col text-center">
                     <h3 class="tw-text-xl tw-font-bold tw-text-center">
                         Internship Role Details
                     </h3>
                     Role {{ roleToHire.internshipRoleDetails.roleId }}:
-                    {{ roleToHire.internshipRoleDetails.roleName }}<br />
+                    {{ roleToHire.internshipRoleDetails.roleName }}<br >
                     Internship Period:
-                    {{ roleToHire.internshipRoleDetails.internshipPeriod }} <br />
+                    {{ roleToHire.internshipRoleDetails.internshipPeriod }} <br >
                 </div>
             </div>
 
-            <SectionRole v-for="section in roleToHire.sections" :key="section" :sectionTitle="section.sectionTitle"
-                :subsections="section.subsections" @cancelEdit="backToOriginal" />
+            <SectionRole
+v-for="section in roleToHire.sections" :key="section" :section-title="section.sectionTitle"
+                :subsections="section.subsections" @cancel-edit="backToOriginal" />
 
             <div class="row">
                 <div class="tw-flex tw-justify-center mt-3">

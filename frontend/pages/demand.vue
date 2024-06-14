@@ -1,13 +1,14 @@
 <template>
   <div>
 
-    <Header headerText="1. Choose role to hire" />
+    <Header header-text="1. Choose role to hire" />
 
     <!-- List of roles to hire in bootstrap cards -->
     <div class="container">
       <div class="row tw-mb-5">
         <label for="dd-filters">Sort by</label>
-          <Dropdown v-model="selectedFilter" inputId="dd-filters" :options="filters" optionLabel="name"
+          <Dropdown
+v-model="selectedFilter" input-id="dd-filters" :options="filters" option-label="name"
             class="w-full" />
       </div>
       <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -20,13 +21,13 @@
               <li class="list-group-item">Department: {{ role.department }}</li>
               <li class="list-group-item">Supervisor: {{ role.supervisor }}</li>
               <li class="list-group-item">
-                Expected Internship Period: <br />{{
+                Expected Internship Period: <br >{{
                   role.expectedInternshipPeriod
                 }}
               </li>
             </ul>
             <div class="card-footer text-center">
-              <button @click="redirectToRoleInfo(role.roleId)" class="btn btn-secondary text-center stretched-link w-100">
+              <button class="btn btn-secondary text-center stretched-link w-100" @click="redirectToRoleInfo(role.roleId)">
                 Get more info
               </button>
             </div>
@@ -105,7 +106,7 @@ const filters = [
   { name: "Expected Internship Period", value: "expectedInternshipPeriod" },
 ];
 
-let selectedFilter = ref(filters[0]);
+const selectedFilter = ref(filters[0]);
 const rolesArray = Object.values(rolesToHire);
 
 const periodToNumber = {

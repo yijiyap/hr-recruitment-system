@@ -16,7 +16,8 @@ export default defineNuxtConfig({
     'primevue/resources/themes/aura-light-green/theme.css'
   ],
   modules: [
-    'nuxt-primevue'
+    'nuxt-primevue',
+    '@nuxt/eslint'
   ],
   primevue: {
     /* Options */

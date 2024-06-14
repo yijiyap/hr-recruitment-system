@@ -1,4 +1,5 @@
-import { IPublicClientApplication, PublicClientApplication } from "@azure/msal-browser";
+import type { IPublicClientApplication} from "@azure/msal-browser";
+import { PublicClientApplication } from "@azure/msal-browser";
 
 export class PublicClientApplicationSingleton {
     private static _instance: IPublicClientApplication;

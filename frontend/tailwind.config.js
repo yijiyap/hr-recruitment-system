@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 export default {
   prefix: "tw-",
   content: [
@@ -10,7 +12,9 @@ export default {
     "./error.vue",
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      'sans': ['Noto Sans', ...defaultTheme.fontFamily.sans],
+    },
   },
   corePlugins: {
     preflight: false,

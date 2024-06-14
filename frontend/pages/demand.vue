@@ -6,10 +6,9 @@
     <!-- List of roles to hire in bootstrap cards -->
     <div class="container">
       <div class="row tw-mb-5">
-        <label for="dd-filters">Sort by</label>
-          <Dropdown
-v-model="selectedFilter" input-id="dd-filters" :options="filters" option-label="name"
-            class="w-full" />
+        <select class="form-select" v-model="selectedFilter">
+          <option v-for="filter in filters" :key="filter.value" :value="filter">{{ filter.name }}</option>
+        </select>
       </div>
       <div class="row row-cols-1 row-cols-md-3 g-4">
         <div v-for="(role, roleId) in filteredRoles" :key="roleId" class="col-md-3">
@@ -18,7 +17,7 @@ v-model="selectedFilter" input-id="dd-filters" :options="filters" option-label="
               <h5 class="card-title">Role to hire: {{ role.roleName }}</h5>
             </div>
             <ul class="list-group list-group-flush">
-              <li class="list-group-item">Department: {{ role.department }}</li>
+              <li class="list-group-item" >Department: {{ role.department }}</li>
               <li class="list-group-item">Supervisor: {{ role.supervisor }}</li>
               <li class="list-group-item">
                 Expected Internship Period: <br >{{
@@ -59,7 +58,7 @@ const rolesToHire = {
     roleName: "HR Intern",
     department: "HRHO",
     supervisor: "Amy",
-    expectedInternshipPeriod: "First half of the year",
+    expectedInternshipPeriod: "Second half of the year",
   },
   role4: {
     roleId: "126",
@@ -80,7 +79,7 @@ const rolesToHire = {
     roleName: "Digital Intern",
     department: "Digital",
     supervisor: "Tap",
-    expectedInternshipPeriod: "Second half of the year",
+    expectedInternshipPeriod: "First half of the year",
   },
   role7: {
     roleId: "129",
@@ -108,6 +107,11 @@ const filters = [
 
 const selectedFilter = ref(filters[0]);
 const rolesArray = Object.values(rolesToHire);
+
+onMounted(() => {
+  console.log(selectedFilter.value.name);
+});
+
 
 const periodToNumber = {
   "First half of the year": 1,

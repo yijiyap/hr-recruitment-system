@@ -14,6 +14,8 @@ export default {
   theme: {
     fontFamily: {
       'sans': ['Noto Sans', ...defaultTheme.fontFamily.sans],
+      'noto': ['Noto Sans', ...defaultTheme.fontFamily.sans],
+      'test': ['Tilt Prism', 'sans-serif'],
     },
   },
   corePlugins: {

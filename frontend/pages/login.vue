@@ -20,7 +20,7 @@ src="https://i.ibb.co/y6ZvhjC/Microsoft-logo-svg.png"
 type="submit"
                                     class="btn btn-secondary"
                                     @click="login">
-                                    <span>Login with Microsoft 365</span>
+                                    <span>Login with Indorama Ventures email</span>
                                 </button>
                             </div>
                         </div>
@@ -33,6 +33,7 @@ type="submit"
   
 <script setup>
 import {useMSAuth} from "~/composables/useMSAuth";
+const config = useRuntimeConfig();
 
 const msAuth = useMSAuth();
 

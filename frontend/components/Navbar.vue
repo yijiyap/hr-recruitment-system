@@ -21,14 +21,14 @@
               <NuxtLink to="/demand" style="text-decoration: none; color: inherit">Hire an intern</NuxtLink>
             </a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link">
               <NuxtLink to="/parents" style="text-decoration: none; color: inherit">Hire a child</NuxtLink>
             </a>
-          </li>
-          <li class="nav-item">
+          </li> -->
+          <!-- <li class="nav-item">
             <a class="nav-link">Donation</a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

@@ -35,6 +35,8 @@ services:
       - PYTHONUNBUFFERED=1
     ports:
       - "5003:5003"
+  
+  
 
   shortlist:
     build:
@@ -44,3 +46,12 @@ services:
       - PYTHONUNBUFFERED=1
     ports:
       - "9001:9001"
+
+  candidates:
+    build:
+      context: ./microservices/complex/candidates
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "9002:9002"

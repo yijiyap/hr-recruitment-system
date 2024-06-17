@@ -14,6 +14,8 @@ import { read } from 'fs'
 
 const uploadfile = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
+    
+
     return uploadfilePOST(req, res)
   } else {
     res.setHeader('Allow', ['POST'])

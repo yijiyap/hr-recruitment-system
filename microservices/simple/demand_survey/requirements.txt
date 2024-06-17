@@ -4,3 +4,4 @@ flask_cors
 polars
 spacy
 docx2txt
+xlsx2csv

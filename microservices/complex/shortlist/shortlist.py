@@ -14,8 +14,29 @@ from flask_cors import CORS
 class DS_info:
     # Demand Survey Info, which contains the title and description of the job
     def __init__(self, title, description):
+        self.name = name
+        self.department = department
+        self.email_address = email_address
+
         self.title = title
         self.description = description
+        self.internship_resources = internship_resources # domestic and international
+        self.education = education
+        self.preferred_course_of_study = preferred_course_of_study
+        self.preferreed_number_of_interns = preferreed_number_of_interns
+
+        self.internship_preference = internship_preference
+        self.jd = jd # a dictionary of the description oftasks and relevant work experience
+
+        self.ivl_skills = ivl_skills
+        self.eng_proficiency = eng_proficiency # a dictionary of the required english proficiency level
+        self.office_tools = office_tools # Microsoft Word, Excel, PowerPoint
+        self.programming_languages = programming_languages # VBA, Python
+        self.data_analysis_tools = data_analysis_tools # Tableau, Power BI, Data Management
+        self.design_tools = design_tools # Photoshop, Illustrator, Premiere Pro, Canva, Figma
+        self.others = others # any other skills required
+
+        self.additional_test = additional_test # any additional test required
 
     def rank_candidates(self, candidates):
         # Rank candidates based on their fitness score

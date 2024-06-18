@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="tw-font-noto">
         <Header header-text="2. Confirm the role information" />
 
         <div class="container-fluid my-3">

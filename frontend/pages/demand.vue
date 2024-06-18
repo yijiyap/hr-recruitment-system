@@ -1,8 +1,6 @@
 <template>
-  <div>
-
+  <div class="tw-font-noto">
     <Header header-text="1. Choose role to hire" />
-
     <!-- List of roles to hire in bootstrap cards -->
     <div class="container">
       <div class="row tw-mb-5 mt-3">
@@ -12,22 +10,23 @@
         </select>
       </div>
       <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div v-for="(role, roleId) in filteredRoles" :key="roleId" class="col-md-3">
-          <div class="card h-100">
-            <div class="card-body">
+        <div v-for="(role, roleId) in filteredRoles" :key="roleId" class="col-md-3 d-flex">
+          <div class="card h-100 flex-fill">
+            <div class="card-body d-flex flex-column">
               <h5 class="card-title">Role to hire: {{ role.roleName }}</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Department: {{ role.department }}</li>
+                <li class="list-group-item">Supervisor: {{ role.supervisor }}</li>
+                <li class="list-group-item">
+                  Expected Internship Period: <br>{{
+                    role.expectedInternshipPeriod
+                  }}
+                </li>
+              </ul>
             </div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" >Department: {{ role.department }}</li>
-              <li class="list-group-item">Supervisor: {{ role.supervisor }}</li>
-              <li class="list-group-item">
-                Expected Internship Period: <br >{{
-                  role.expectedInternshipPeriod
-                }}
-              </li>
-            </ul>
             <div class="card-footer text-center">
-              <button class="btn btn-secondary text-center stretched-link w-100" @click="redirectToRoleInfo(role.roleId)">
+              <button class="btn btn-secondary text-center stretched-link w-100"
+                @click="redirectToRoleInfo(role.roleId)">
                 Get more info
               </button>
             </div>
@@ -130,7 +129,7 @@ const filteredRoles = computed(() => {
   });
 })
 
-/* 
+/*
   Filter for when the internship period is in "Day Month Year" string format
   If the selected filter is department, sort the roles based on department
   If the selected filter is expectedInternshipPeriod, sort the roles based on the expectedInternshipPeriod

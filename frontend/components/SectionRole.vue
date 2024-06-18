@@ -1,5 +1,5 @@
 <template>
-  <div class="row bg-light p-3 my-3">
+  <div class="row bg-light p-3 my-3 tw-font-noto">
     <div class="col">
       <h3 class="tw-text-xl tw-font-bold tw-text-center">
         {{ sectionTitle }}
@@ -16,7 +16,7 @@
 
       <div v-else>
         <div v-for="subsection in reactiveSubsections" :key="subsection">
-          <h4 class="tw-text-lg tw-font-bold">{{ subsection.subsectionTitle }}</h4>
+          <h4 class="tw-text-lg tw-font-bold tw-font-noto">{{ subsection.subsectionTitle }}</h4>
           <textarea v-model="subsection.subsectionText" />
         </div>
       </div>

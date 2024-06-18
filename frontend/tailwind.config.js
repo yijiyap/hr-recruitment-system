@@ -12,10 +12,10 @@ export default {
     "./error.vue",
   ],
   theme: {
-    fontFamily: {
-      'sans': ['Noto Sans', ...defaultTheme.fontFamily.sans],
-      'noto': ['Noto Sans', ...defaultTheme.fontFamily.sans],
-      'test': ['Tilt Prism', 'sans-serif'],
+    extend: {
+      fontFamily: {
+        'noto': ['Noto+Sans','sans-serif'],
+      },
     },
   },
   corePlugins: {

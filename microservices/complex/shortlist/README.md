@@ -1,6 +1,17 @@
 # Shortlist microservice
 This is a complex microservice as it calls on the CV microservice and DS (demand survey) microservice to shortlist the right candidate.
 
+## Immediate rejection criteria
+1. Not in internship resources
+2. Not target Education level
+3. Not in duration of internship
+4. If "Good" is required, then must minimally pass the test
+
+## Bonus items
+1. In preferred course of study
+2. Words in job description and experience required match the words in the intern's resume
+3. If "Good-to-have and above", then having the word in your resume will be an extra point 
+
 ## Algorithms considered
 1. Keyword matching - the more matches there are between the candidate and the DS information, the higher the ranking
 2. Cosine similarity - paper taken from [here](https://www.researchgate.net/publication/366706213_Evaluating_Automatic_CV_Shortlisting_Tool_For_Job_Recruitment_Based_On_Machine_Learning_Techniques)

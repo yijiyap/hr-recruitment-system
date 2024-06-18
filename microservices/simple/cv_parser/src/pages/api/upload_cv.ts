@@ -33,6 +33,8 @@ async function uploadfilePOST (req: NextApiRequest, res: NextApiResponse) {
       return;
     }
 
+    const resumeToSend:any = [];
+
     // Iterate over the keys of the files object to find the uploaded file(s)
     Object.keys(files).forEach(async (fileName) => {
       const fileUrl = files[fileName].path
@@ -50,13 +52,9 @@ async function uploadfilePOST (req: NextApiRequest, res: NextApiResponse) {
       const resume = extractResumeFromSections(sections);
 
       console.log(resume);
-
-      console.log(resume.workExperiences[0].descriptions)
-      // Send the resume back to another endpoint
-
-
+      resumeToSend.push(resume);
     });
-    res.status(200).json({ fields, files })
+    res.status(200).json({ fields, files, resumeToSend })
   })
 }
 

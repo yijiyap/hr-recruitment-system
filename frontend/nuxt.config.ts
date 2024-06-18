@@ -40,5 +40,10 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+  googleFonts: {
+    families: {
+      'Noto+Sans': [400, 700],
+    }
   }
 })

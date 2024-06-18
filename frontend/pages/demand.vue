@@ -7,7 +7,7 @@
     <div class="container">
       <div class="row tw-mb-5 mt-3">
         Sort by
-        <select class="form-select" v-model="selectedFilter">
+        <select v-model="selectedFilter" class="form-select">
           <option v-for="filter in filters" :key="filter.value" :value="filter">{{ filter.name }}</option>
         </select>
       </div>

@@ -46,7 +46,7 @@ class DS_info:
 
 class Candidate:
     # Candidate class, which contains the name, skills, and experience of the candidate
-    def __init__(self, name, skills, experience):
+    def __init__(self, email, job_application_info, eng_test_score, cv_info):
         self.email = email
 
         self.job_application_info = job_application_info
@@ -67,11 +67,13 @@ class Candidate:
         self.open_to_other_locations = job_application_info.get(open_to_other_locations)
         
         # info from CV
+        self.profile = cv_info.get(profile)
+        self.educations = cv_info.get(educations)
+        self.work_experiences = cv_info.get(workExperiences)
+        self.projects = cv_info.get(projects)
         self.skills = cv_info.get(skills)
-
-
-
-
+        self.custom = cv_info.get(custom)
+        
 app = Flask(__name__)
 CORS(app)
 

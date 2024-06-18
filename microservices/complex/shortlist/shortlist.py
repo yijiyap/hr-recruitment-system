@@ -92,7 +92,18 @@ def shortlist():
     # calculate fitness score for each candidate, and rank them
     shortlisted_candidates = []
     for candidate_info in candidates_info:
-        candidate = Candidate(candidate_info["name"], candidate_info["skills"], candidate_info["experience"])
+        # create a candidate object
+        candidate = Candidate(candidate_info["email"], candidate_info["job_application_info"], candidate_info["eng_test_score"], candidate_info["cv_info"])
+
+        # CHECK FOR IMMEIDATE REJECTION CRITERIA
+        # check if the candidate falls within the preferred education level
+        if candidate.education_level not in target_ds.education_level:
+            continue
+
+        # check if the candidate falls within the preferred department of interest
+        
+
+        # calculate fitness score
         fitness_score = target_ds.calculate_fitness_score(candidate)
         shortlisted_candidates.append({'name': candidate.name, 'fitness_score': fitness_score})
     

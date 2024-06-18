@@ -33,7 +33,7 @@ async function uploadfilePOST (req: NextApiRequest, res: NextApiResponse) {
       return;
     }
 
-    const resumeToSend = [];
+    const resumeToSend:any = [];
 
     // Iterate over the keys of the files object to find the uploaded file(s)
     Object.keys(files).forEach(async (fileName) => {

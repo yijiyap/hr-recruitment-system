@@ -75,9 +75,13 @@ class Candidate:
         self.cv_info = cv_info
 
         # info from job application
+        self.name = job_application_info.get(name)
+        self.nationality = job_application_info.get(nationality)
+
         self.values_test_score = job_application_info.get(values_test_score)
         self.education_level = job_application_info.get(education_level)
         self.current_university = job_application_info.get(current_university)
+        self.current_university_country = job_application_info.get(current_university_country)
         self.current_major = job_application_info.get(current_major)
         self.graduation_date = job_application_info.get(graduation_date)
 
@@ -117,12 +121,13 @@ def shortlist():
         candidate = Candidate(candidate_info["email"], candidate_info["job_application_info"], candidate_info["eng_test_score"], candidate_info["cv_info"])
 
         # CHECK FOR IMMEIDATE REJECTION CRITERIA
+        # check if candidate is in internship resources - to confirm with P Amy
+        if target_ds.internship_resources == "Domestic" and candidate.current_university_country != "Thailand":
+            continue
+
         # check if the candidate falls within the preferred education level
         if candidate.education_level not in target_ds.education_level:
             continue
-
-        # check if the candidate falls within the preferred department of interest
-        
 
         # calculate fitness score
         fitness_score = target_ds.calculate_fitness_score(candidate)

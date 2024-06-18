@@ -12,9 +12,9 @@
         </select>
       </div>
       <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div v-for="(role, roleId) in filteredRoles" :key="roleId" class="col-md-3">
-          <div class="card h-100">
-            <div class="card-body">
+        <div v-for="(role, roleId) in filteredRoles" :key="roleId" class="col-md-3 d-flex">
+          <div class="card h-100 flex-fill">
+            <div class="card-body d-flex flex-column">
               <h5 class="card-title">Role to hire: {{ role.roleName }}</h5>
             </div>
             <ul class="list-group list-group-flush">

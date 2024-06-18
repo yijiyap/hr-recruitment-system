@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="tw-font-noto">
         <Header header-text="Shortlisted CVs" />
 
         <div class="container-fluid my-3">

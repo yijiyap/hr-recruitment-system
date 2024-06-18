@@ -1,6 +1,6 @@
 <!-- Header.vue -->
 <template>
-    <h2 class="tw-text-2xl tw-font-bold tw-text-center tw-mt-5">
+    <h2 class="tw-text-2xl tw-font-bold tw-text-center tw-mt-5 tw-font-noto">
       {{ headerText }}
     </h2>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tw-font-noto">
     <div class="text-center">
         Hi!
     </div>

@@ -1,7 +1,7 @@
 <template>
   <nav
 :class="[
-    'navbar sticky-top navbar-expand-lg bg-body-tertiary p-4',
+    'navbar sticky-top navbar-expand-lg bg-body-tertiary p-4 tw-font-noto',
     { 'scrolled': !view.atTopOfPage },
   ]">
     <div class="container-fluid">

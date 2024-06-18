@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tw-font-noto">
 
     <Header header-text="1. Choose role to hire" />
 

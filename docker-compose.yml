@@ -36,7 +36,14 @@ services:
     ports:
       - "5003:5003"
   
-  
+  eng_test:
+    build:
+      context: ./microservices/simple/eng_test
+      dockerfile: Dockerfile
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - "5004:5004"
 
   shortlist:
     build:

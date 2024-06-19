@@ -8,7 +8,7 @@ This project was built with maintainability and scalability in mind, utilizing a
 
 ## Workflow:
 ![alt text](workflow.png)
-The architecture is built around SharePoint as the primary data storage solution, ensuring seamless integratino and data management with legacy systems.
+The architecture is built around SharePoint as the primary data storage solution, ensuring seamless integration and data management with legacy systems.
 
 ## Microservices
 ### Complex microservices
@@ -22,7 +22,7 @@ The architecture is built around SharePoint as the primary data storage solution
 4. **English test (5004)** - Python, Flask
 
 ## Frontend
-The frontend is powered by Nuxt.js version 3.12, ensuring a responsive and dynamic user interface. It is designed to be user-friendly and intuitive, providing a seamless experience for recruiters and candidates. 
+The frontend is powered by Nuxt.js version 3.12, ensuring a responsive and dynamic user interface for recruiters. 
 
 ## Installing the HR-recruitment-system
 Generally, you should install the HR-recruitment-system by building and running the Dockerfile, which contains all the dependencies you need. 

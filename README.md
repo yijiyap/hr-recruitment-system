@@ -6,9 +6,8 @@ This application leverages modern technologies to streamline the recruitment wor
 
 This project was built with maintainability and scalability in mind, utilizing a microservices architecture to ensure modularity and flexibility. The system comprises complex and simple microservices, each serving a specific function to enhance the recruitment process.
 
-## Architecture:
-![alt text](architecture.png)
-
+## Workflow:
+![alt text](workflow.png)
 The architecture is built around SharePoint as the primary data storage solution, ensuring seamless integratino and data management with legacy systems.
 
 ## Microservices

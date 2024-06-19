@@ -20,10 +20,20 @@ def ping():
 @app.route("/eng_test/all", methods=["GET"])
 def all():
     """
-    call the sharepoint microservice and get all the english test scores
+    This endpoint will be called by the `candidates` microservice to get the english test scores of all candidates.
+    When this endpoint is called, the `eng_test` microservice will call the `sharepoint` microservice and get all the english test scores from SharePoint.
+
+    It will return the english test scores of all candidates in the following format:
+    [
+        {
+            "email": "john@example.com",
+            "percent": 80
+        },
+        ...
+    ]
     """
     # call the SharePoint Wrapper microservice to get the job application info
-    eng_test_scores = requests.get("http://localhost:5001/eng_test/all").json()
+    # eng_test_scores = requests.get("http://localhost:5001/eng_test/all").json()
 
     # for testing purposes, read the csv file directly
     # csv_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../eng_test.csv'))

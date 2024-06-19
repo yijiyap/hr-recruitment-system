@@ -22,8 +22,9 @@ v-else
                 <dd class="tw-text-gray-500 tw-text-sm">{{ userStore.user.username }}</dd>
                 <dt class="tw-sr-only">Email</dt>
             </dl>
-            <button class="btn btn-secondary"
-                @click="logout(userStore.user.homeAccountId)" type="submit">Logout
+            <button
+class="btn btn-secondary"
+                type="submit" @click="logout(userStore.user.homeAccountId)">Logout
             </button>
         </div>
 

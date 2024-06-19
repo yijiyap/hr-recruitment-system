@@ -13,7 +13,7 @@ from flask_cors import CORS
 
 class DS_info:
     # Demand Survey Info, which contains the title and description of the job
-    def __init__(self, title, description):
+    def __init__(self, title, description, department, email_address, internship_resources, preferred_education_level, preferred_course_of_study, preferred_number_of_interns, internship_preference, jd, ivl_skills, eng_proficiency, office_tools, programming_languages, data_analysis_tools, design_tools, others, additional_test):
         self.name = name
         self.department = department
         self.email_address = email_address
@@ -21,9 +21,9 @@ class DS_info:
         self.title = title
         self.description = description
         self.internship_resources = internship_resources # domestic and international
-        self.education = education
+        self.preferred_education_level = preferred_education_level # Bachelor's, Master's, Vocational
         self.preferred_course_of_study = preferred_course_of_study
-        self.preferreed_number_of_interns = preferreed_number_of_interns
+        self.preferred_number_of_interns = preferred_number_of_interns
 
         self.internship_preference = internship_preference
         self.jd = jd # a dictionary of the description oftasks and relevant work experience
@@ -121,12 +121,20 @@ def shortlist():
         candidate = Candidate(candidate_info["email"], candidate_info["job_application_info"], candidate_info["eng_test_score"], candidate_info["cv_info"])
 
         # CHECK FOR IMMEIDATE REJECTION CRITERIA
-        # check if candidate is in internship resources - to confirm with P Amy
+        # check if candidate is in internship resources - to confirm with P Amy and discuss in the next meeting
         if target_ds.internship_resources == "Domestic" and candidate.current_university_country != "Thailand":
             continue
 
         # check if the candidate falls within the preferred education level
-        if candidate.education_level not in target_ds.education_level:
+        if candidate.education_level not in target_ds.preferred_education_level:
+            continue
+            
+        # check if duration of internship is within the preferred duration
+        if not internship_duration_is_eligible(target_ds, candidate):
+            continue
+            
+        # check if english proficiency is within the required level
+        if not english_test_is_eligible(target_ds, candidate):
             continue
 
         # calculate fitness score
@@ -134,6 +142,30 @@ def shortlist():
         shortlisted_candidates.append({'name': candidate.name, 'fitness_score': fitness_score})
     
     return jsonify(sorted(shortlisted_candidates, key=lambda x: x['fitness_score'], reverse=True))
+
+def internship_duration_is_eligible(target_ds, candidate):
+    # convert candidate's dates from string to datetime
+    candidate_start_date = datetime.strptime(candidate.tentative_internship_start_date, "%Y-%m-%d")
+    candidate_end_date = datetime.strptime(candidate.tentative_internship_end_date, "%Y-%m-%d")
+    
+    # define internship periods
+    internship_periods = {
+        "First half of the year (Jan - Jun)" : (datetime(2025, 1, 1), datetime(2025, 6, 30)),
+        "Summer Break (May - Aug)" : (datetime(2025, 5, 1), datetime(2025, 8, 31)),
+        "Second half of the year (Jul - Dec)" : (datetime(2025, 7, 1), datetime(2025, 12, 31))
+    }
+
+    # Check if applicant's dates fall within any of the internship periods
+    for period, (period_start, period_end) in internship_periods.items():
+        if start_date <= period_end or end_date >= period_start: # made it more lenient to allow for some overlap. For strictly, change to "and"
+            return True
+    return False
+
+def english_test_is_eligible(target_ds, candidate):
+    # check if the candidate's english proficiency is within the required level
+    if candidate.eng_test_score < target_ds.eng_proficiency:
+        return False
+    return True
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=9001, debug=True)

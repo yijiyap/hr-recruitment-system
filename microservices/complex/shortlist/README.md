@@ -5,7 +5,7 @@ This is a complex microservice as it calls on the CV microservice and DS (demand
 1. Not in internship resources
 2. Not target Education level
 3. Not in duration of internship
-4. If "Good" is required, then must minimally pass the test
+4. If "Good" is required for English proficiency, then must minimally pass the English test
 
 ## Bonus items
 1. In preferred course of study

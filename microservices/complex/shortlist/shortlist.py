@@ -83,28 +83,19 @@ class DS_info:
 
         ###### START OF CALCULATE SCORE PART 3 ######
         # Check if candidate has the required skills
-        if self.office_tools:
-            for tool in self.office_tools:
-                if tool in candidate.words:
-                    score += 1
-        if self.programming_languages:
-            for language in self.programming_languages:
-                if language in candidate.words:
-                    score += 1
-        if self.data_analysis_tools:
-            for tool in self.data_analysis_tools:
-                if tool in candidate.words:
-                    score += 1
-        if self.design_tools:
-            for tool in self.design_tools:
-                if tool in candidate.words:
-                    score += 1
-        if self.others:
-            for skill in self.others:
-                if skill in candidate.words:
-                    score += 1
-
-
+        skills_to_check = [
+            self.office_tools,
+            self.programming_languages,
+            self.data_analysis_tools,
+            self.design_tools,
+            self.others
+        ]
+        # Check for "Good-to-have" and "Mandatory"
+        for skill_to_check in skills_to_check:
+            if skill_to_check and skill_to_check != "Not relevant":
+                for skill in skill_to_check:
+                    if skill in candidate.skills:
+                        score += 1
         return score
 
 

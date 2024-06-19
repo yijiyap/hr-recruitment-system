@@ -96,8 +96,13 @@ class DS_info:
                 for skill in skill_to_check:
                     if skill in candidate.skills:
                         score += 1
-        return score
+        ###### END OF CALCULATE SCORE PART 3 ######
 
+        ###### START OF CALCULATE SCORE PART 4 ######
+        # Check if the "department of interest" is in line with that of the role.
+        if self.department in candidate.department_of_interest:
+            score += 1
+        return score
 
 class Candidate:
     # Candidate class, which contains the name, skills, and experience of the candidate
@@ -123,7 +128,7 @@ class Candidate:
         self.internship_duration = job_application_info.get(internship_duration)
         self.tentative_internship_start_date = job_application_info.get(tentative_internship_start_date)
         self.tentative_internship_end_date = job_application_info.get(tentative_internship_end_date)
-        self.department_of_interest = job_application_info.get(department_of_interest)
+        self.department_of_interest = job_application_info.get(department_of_interest) # list of departments
         self.open_to_other_locations = job_application_info.get(open_to_other_locations)
         
         # info from CV

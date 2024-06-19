@@ -119,25 +119,26 @@ def shortlist():
 
     # calculate fitness score for each candidate, and rank them
     shortlisted_candidates = []
+
     for candidate_info in candidates_info:
         # create a candidate object
         candidate = Candidate(candidate_info["email"], candidate_info["job_application_info"], candidate_info["eng_test_score"], candidate_info["cv_info"])
 
         # CHECK FOR IMMEIDATE REJECTION CRITERIA
         # check if candidate is in internship resources - to confirm with P Amy and discuss in the next meeting
-        if target_ds.internship_resources == "Domestic" and candidate.current_university_country != "Thailand":
+        if not is_candidate_in_internship_resources(target_ds, candidate): 
             continue
 
         # check if the candidate falls within the preferred education level
-        if candidate.education_level not in target_ds.preferred_education_level:
+        if not is_education_level_preferred(target_ds, candidate):
             continue
             
         # check if duration of internship is within the preferred duration
-        if not internship_duration_is_eligible(target_ds, candidate):
+        if not is_internship_duration_eligible(target_ds, candidate):
             continue
             
         # check if english proficiency is within the required level
-        if not english_test_is_eligible(target_ds, candidate):
+        if not is_english_test_eligible(target_ds, candidate):
             continue
 
         # calculate fitness score
@@ -146,7 +147,19 @@ def shortlist():
     
     return jsonify(sorted(shortlisted_candidates, key=lambda x: x['fitness_score'], reverse=True))
 
-def internship_duration_is_eligible(target_ds, candidate):
+def is_candidate_in_internship_resources(target_ds, candidate):
+    # check if candidate is in internship resources
+    if target_ds.internship_resources == "Domestic" and candidate.current_university_country != "Thailand":
+        return False
+    return True
+
+def is_education_level_preferred(target_ds, candidate):
+    # check if the candidate falls within the preferred education level
+    if candidate.education_level not in target_ds.preferred_education_level:
+        return False
+    return True
+
+def is_internship_duration_eligible(target_ds, candidate):
     # convert candidate's dates from string to datetime
     candidate_start_date = datetime.strptime(candidate.tentative_internship_start_date, "%Y-%m-%d")
     candidate_end_date = datetime.strptime(candidate.tentative_internship_end_date, "%Y-%m-%d")
@@ -164,9 +177,9 @@ def internship_duration_is_eligible(target_ds, candidate):
             return True
     return False
 
-def english_test_is_eligible(target_ds, candidate):
+def is_english_test_eligible(target_ds, candidate):
     # check if the candidate's english proficiency is within the required level
-    if candidate.eng_test_score < target_ds.eng_proficiency:
+    if target_ds.eng_proficiency["Reading"] == ["Good", "Excellent"] and candidate.eng_test_score < 80:
         return False
     return True
 

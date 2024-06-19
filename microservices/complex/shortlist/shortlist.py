@@ -13,20 +13,18 @@ from flask_cors import CORS
 
 class DS_info:
     # Demand Survey Info, which contains the title and description of the job
-    def __init__(self, title, description, department, email_address, internship_resources, preferred_education_level, preferred_course_of_study, preferred_number_of_interns, internship_preference, jd, ivl_skills, eng_proficiency, office_tools, programming_languages, data_analysis_tools, design_tools, others, additional_test):
+    def __init__(self, name, department, email_address, internship_resources, preferred_education_level, preferred_course_of_study, preferred_number_of_interns, internship_preference, jd, ivl_skills, eng_proficiency, office_tools, programming_languages, data_analysis_tools, design_tools, others, additional_test):
         self.name = name
         self.department = department
         self.email_address = email_address
 
-        self.title = title
-        self.description = description
         self.internship_resources = internship_resources # domestic and international
         self.preferred_education_level = preferred_education_level # Bachelor's, Master's, Vocational
         self.preferred_course_of_study = preferred_course_of_study
         self.preferred_number_of_interns = preferred_number_of_interns
 
         self.internship_preference = internship_preference
-        self.jd = jd # a dictionary of the description oftasks and relevant work experience
+        self.jd = jd # a dictionary of the "description of tasks" and "relevant work experience"
 
         self.ivl_skills = ivl_skills
         self.eng_proficiency = eng_proficiency # a dictionary of the required english proficiency level
@@ -51,19 +49,64 @@ class DS_info:
         return ranked_candidates
     
     def calculate_fitness_score(self, candidate):
-        # Calculate the fitness score
-        job_keywords = set(word_tokenize(self.description.lower()))
+        score = 0
 
-        # Calculate the number of matching skills
-        matching_skills = len(job_keywords.intersection(candidate.skills))
+        ###### START OF CALCULATE SCORE PART 1 ######
+        # Check if candidate is in preferred course of study
+        if candidate.current_major in self.preferred_course_of_study:
+            score += 1
+        ###### END OF CALCULATE SCORE PART 1 ######
 
-        # Calculate the number of matching experiences
-        matching_experiences = len(job_keywords.intersection(candidate.experience))
+        ###### START OF CALCULATE SCORE PART 2 ######
+        # Check if candidate's CV and expectations matches the words in the job description in the intern's resume
+        jd_words = set(word_tokenize(self.jd.get("description of tasks").lower())) | set(word_tokenize(self.jd.get("relevant work experience").lower()))
 
-        # Calculate the fitness score
-        score = (matching_skills + matching_experiences) / len(job_keywords)
+        # Tokenize and clean words
+        jd_words = {word for word in jd_words if word not in stopwords.words('english') and word not in string.punctuation}
 
-        return score * 100 # convert to percentage
+        # Combine all candidate info into one text
+        candidate_text = " ".join([
+            candidate.profile or "",
+            " ".join(candidate.work_experiences) or "",
+            " ".join(candidate.projects) or "",
+            " ".join(candidate.skills) or "",
+            " ".join(candidate.custom) or "",
+            " ".join(candidate.internship_expectations) or ""
+        ]).lower()
+
+        candidate_words = set(word_tokenize(candidate_text))
+        candidate_words = {word for word in candidate_words if word not in stopwords.words('english') and word not in string.punctuation}
+
+        # Calculate the number of words that match. Each match adds 0.5 to the score (can be adjusted)
+        score += 0.5 * len(jd_words & candidate_words)
+        ###### END OF CALCULATE SCORE PART 2 ######
+
+        ###### START OF CALCULATE SCORE PART 3 ######
+        # Check if candidate has the required skills
+        if self.office_tools:
+            for tool in self.office_tools:
+                if tool in candidate.words:
+                    score += 1
+        if self.programming_languages:
+            for language in self.programming_languages:
+                if language in candidate.words:
+                    score += 1
+        if self.data_analysis_tools:
+            for tool in self.data_analysis_tools:
+                if tool in candidate.words:
+                    score += 1
+        if self.design_tools:
+            for tool in self.design_tools:
+                if tool in candidate.words:
+                    score += 1
+        if self.others:
+            for skill in self.others:
+                if skill in candidate.words:
+                    score += 1
+
+
+        return score
+
 
 class Candidate:
     # Candidate class, which contains the name, skills, and experience of the candidate
@@ -85,6 +128,7 @@ class Candidate:
         self.current_major = job_application_info.get(current_major)
         self.graduation_date = job_application_info.get(graduation_date)
 
+        self.internship_expectations = job_application_info.get(internship_expectations)
         self.internship_duration = job_application_info.get(internship_duration)
         self.tentative_internship_start_date = job_application_info.get(tentative_internship_start_date)
         self.tentative_internship_end_date = job_application_info.get(tentative_internship_end_date)
@@ -108,9 +152,6 @@ def ping():
 
 @app.route("/shortlist", methods=["POST"])
 def shortlist():
-    score = 0
-    max_score = 0
-
     # get demand survey info from the post request
     target_ds = DS_info(request.json["title"], request.json["description"])
 
@@ -124,7 +165,7 @@ def shortlist():
         # create a candidate object
         candidate = Candidate(candidate_info["email"], candidate_info["job_application_info"], candidate_info["eng_test_score"], candidate_info["cv_info"])
 
-        # CHECK FOR IMMEIDATE REJECTION CRITERIA
+        # CHECK FOR IMMEDIATE REJECTION CRITERIA
         # check if candidate is in internship resources - to confirm with P Amy and discuss in the next meeting
         if not is_candidate_in_internship_resources(target_ds, candidate): 
             continue
@@ -140,8 +181,8 @@ def shortlist():
         # check if english proficiency is within the required level
         if not is_english_test_eligible(target_ds, candidate):
             continue
-
-        # calculate fitness score
+        
+        # CALCULATE SCORE
         fitness_score = target_ds.calculate_fitness_score(candidate)
         shortlisted_candidates.append({'name': candidate.name, 'fitness_score': fitness_score})
     

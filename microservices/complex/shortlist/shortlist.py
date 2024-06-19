@@ -108,6 +108,9 @@ def ping():
 
 @app.route("/shortlist", methods=["POST"])
 def shortlist():
+    score = 0
+    max_score = 0
+
     # get demand survey info from the post request
     target_ds = DS_info(request.json["title"], request.json["description"])
 

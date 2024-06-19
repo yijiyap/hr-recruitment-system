@@ -28,19 +28,19 @@ Nuxt - v3.12
 Generally, you should install the HR-recruitment-system by building and running the Dockerfile, which contains all the dependencies you need. 
 1. **Launch Docker Desktop**
 
-2. **Clone the repository**
+2. **Clone the repository**<br/>
 clone the repository by running the following command in your terminal:
 ```bash
 git clone https://github.com/yijiyap/hr-recruitment-system.git
 cd hr-recruitment-system
 ```
 
-3. **Build the Dockerfile**
+3. **Build the Dockerfile**<br/>
 ```bash
 docker compose up --build -d
 ```
 
-4. **Access the application**
+4. **Access the application**<br/>
 The application should be running on `http://localhost:3000`
 
 5. **Stop the application**

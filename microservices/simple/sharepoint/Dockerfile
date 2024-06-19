@@ -6,6 +6,6 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY onedrive.py .
+COPY sharepoint.py .
 
-CMD ["python", "onedrive.py"]
+CMD ["python", "sharepoint.py"]

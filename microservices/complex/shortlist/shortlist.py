@@ -162,7 +162,7 @@ def shortlist():
         candidate = Candidate(candidate_info["email"], candidate_info["job_application_info"], candidate_info["eng_test_score"], candidate_info["cv_info"])
 
         # CHECK FOR IMMEDIATE REJECTION CRITERIA
-        # check if candidate is in internship resources - to confirm with P Amy and discuss in the next meeting
+        # check if candidate is in internship resources
         if not is_candidate_in_internship_resources(target_ds, candidate): 
             continue
 
@@ -186,8 +186,12 @@ def shortlist():
 
 def is_candidate_in_internship_resources(target_ds, candidate):
     # check if candidate is in internship resources
-    if target_ds.internship_resources == "Domestic" and candidate.current_university_country != "Thailand":
-        return False
+    # if the internship resources is "Domestic", then there are 2 scenarios where the candidate is accepted:
+        # 1. The candidate is of Thai nationality
+        # 2. The candidate studies in a university in Thailand
+    if target_ds.internship_resources == "Domestic":
+        if candidate.current_university_country != "Thailand" and candidate.nationality != "Thai":
+            return False
     return True
 
 def is_education_level_preferred(target_ds, candidate):

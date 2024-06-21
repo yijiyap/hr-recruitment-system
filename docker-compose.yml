@@ -2,12 +2,12 @@ version: "3"
 
 services:
   ##### FRONTEND SERVICES #####
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "3000:3000"
 
   ##### BACKEND SERVICES #####
   # onedrive:

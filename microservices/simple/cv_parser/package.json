@@ -25,7 +25,7 @@
     "next": "^14.2.4",
     "pdfjs": "^2.5.0",
     "pdfjs-dist": ">=4.2.67",
-    "postcss": "8.4.24",
+    "postcss": "8.4.31",
     "react": "^18.3.1",
     "react-contenteditable": "^3.3.7",
     "react-dom": "^18.3.1",

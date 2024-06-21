@@ -66,6 +66,7 @@ def all():
     # GRAPH API CODE HERE
 
     # Convert the PDF urls to base64 encoded strings
+    pass
 
 @app.route("/sharepoint/cv/all", methods=["GET"])
 def all_cv():

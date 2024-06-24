@@ -6,7 +6,7 @@
   ]">
     <div class="container-fluid">
       <NuxtLink to="/">
-        <img src="/ivl_logo.svg" alt="IVL Logo" width="80%" >
+        <img src="/ivl_logo.SVG" alt="IVL Logo" width="80%" >
       </NuxtLink>
       <h1 class="tw-text-2xl tw-font-bold tw-text-center mt-2">
         Internship Recruitment System

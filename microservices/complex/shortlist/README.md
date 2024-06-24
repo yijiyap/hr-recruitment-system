@@ -9,11 +9,28 @@ This is a complex microservice as it calls on the CV microservice and DS (demand
 
 ## Bonus items
 1. In preferred course of study
-2. Words in job description and experience required match the words in the intern's resume
-3. If the skills in the DS are tagged as "Good-to-have and above", then having the word in your resume will be an extra point 
+2. Words in job description and experience required match the words in the intern's application
+3. If the skills in the DS are tagged as "Good-to-have and above", then having the word in your application will be an extra point 
 4. If the "department of interest" is in line with the role, then it will be an extra point
 
 ## Algorithms considered
 1. Keyword matching - the more matches there are between the candidate and the DS information, the higher the ranking
 2. Cosine similarity - paper taken from [here](https://www.researchgate.net/publication/366706213_Evaluating_Automatic_CV_Shortlisting_Tool_For_Job_Recruitment_Based_On_Machine_Learning_Techniques)
 3. TF-IDF similarity - reference to this project [here](https://github.com/harsha-chirumamilla/resume-screening)
+
+## Fitness Score Calculation Deep Dive
+The `calculate_fitness_score` function calculates a fitness score for a given candidate based on several criteria derived from the job description. It uses keyword matching to assess how closely the candidate's qualifications, experiences, and interests align wth those required for the position. Here is a breakdown of how the algorithm works:
+### Part 1: Preferred course of study
+- If the candidate's course of study matches the preferred course of study for the position, the score is incremented by 1. This ensures that the candidate has the necessary background knowledge to do well in the role.
+### Part 2: Keyword matching between the JD and Candidate's profile
+- It tokenizes (breaks down into individual words) the job description's task descriptions and relevant work experience sections, removing common stop words (like "the," "is," etc.) and punctuation to focus on meaningful keywords.
+- Similarly, it tokenizes and cleans the candidate's profile, work experiences, projects, skills, custom fields, and internship expectations.
+- Then, it calculates the intersection of these sets of keywords (words found in both the JD and the candidate's profile). For each matching keyword, it adds 0.5 to the score. This part measures how many of the job's essential terms the candidate has demonstrated knowledge or experience in.
+### Part 3: Checking for required skills
+- It iterates through a list of required skills for the job, including office tools, programming languages, data analysis tools, design tools, and other skills.
+- For each category of skills, if the category is applicable (not marked as "Not relevant"), it checks if the candidate lists any of the required skills in their skill set. For each matched skill, it increments the score by 1. This part evaluates the candidate's possession of critical skills needed for the job. 
+### Part 4: Departmental Interest Alignment
+- Finally, it checks if the candidate's declared department of interest matches the department associated with the job. If there's a match, it adds 1 to the score. This part ensures that the candidate has expressed interest in working within the right academic or professinoal field.
+### Part 5: Final Score Calculation
+- The final score is the sum of the scores from the four parts above. This score is used to rank candidates based on how well they match the job description and requirements. The higher the score, the better the candidate's fit for the position.
+

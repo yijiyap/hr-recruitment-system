@@ -102,6 +102,8 @@ class DS_info:
         # Check if the "department of interest" is in line with that of the role.
         if self.department in candidate.department_of_interest:
             score += 1
+        ##### END OF CALCULATE SCORE PART 4 ######
+
         return score
 
 class Candidate:

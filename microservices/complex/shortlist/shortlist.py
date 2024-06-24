@@ -148,24 +148,6 @@ def ping():
 
 @app.route("/shortlist", methods=["POST"])
 def shortlist():
-    """
-    Shortlist candidates based on job requirements.
-
-    Query Parameters:
-    - page (int): The page number (default: 1)
-    - per_page (int): Number of results per page (default: 10)
-
-    Returns:
-    A JSON object containing:
-    - candidates: List of shortlisted candidates for the requested page
-    - page: Current page number
-    - per_page: Number of results per page
-    - total_candidates: Total number of shortlisted candidates
-    - total_pages: Total number of pages
-    """
-    # Get pagination parameters from the request
-    page = request.args.get("page", 1, type=int)
-    per_page = requests.args.get("per_page", 10, type=int)
 
     # get demand survey info from the post request
     target_ds = DS_info(
@@ -188,11 +170,8 @@ def shortlist():
         request.json["additional_test"]
     )
 
-    # Calculate the offset for pagination
-    offest = (page - 1) * per_page
-
-    # Fetch only the candidates for the current page
-    candidates = requests.get(f"http://localhost:9002/all?start={offset}&limit={per_page}").json()
+    # get all candidates info from the candidate microservice
+    candidates_info = requests.get("http://localhost:9002/all").json()
 
     # calculate fitness score for each candidate, and rank them
     shortlisted_candidates = []
@@ -221,18 +200,8 @@ def shortlist():
         # CALCULATE SCORE
         fitness_score = target_ds.calculate_fitness_score(candidate)
         shortlisted_candidates.append({'name': candidate.name, 'fitness_score': fitness_score})
-
-    # calculate total candidates and total pages
-    total_candidates = len(candidate_info)
-    total_pages = (total_candidates + per_page - 1) // per_page
-
-    return jsonify({
-        "candidates": sorted(shortlisted_candidates, key=lambda x: x["fitness_score"], reverse=True),
-        "page": page,
-        "per_page": per_page,
-        "total_candidates": total_candidates,
-        "total_pages": total_pages
-    })
+    
+    return jsonify(sorted(shortlisted_candidates, key=lambda x: x['fitness_score'], reverse=True))
 
 def is_candidate_in_internship_resources(target_ds, candidate):
     # check if candidate is in internship resources

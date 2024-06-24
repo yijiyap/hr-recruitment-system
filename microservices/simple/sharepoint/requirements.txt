@@ -3,3 +3,4 @@ flask
 azure-identity
 msgraph-sdk
 flask_cors
+)365

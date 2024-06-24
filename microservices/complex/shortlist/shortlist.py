@@ -1,7 +1,6 @@
 # gather job info from the post request
 # gather candidate info from the candidate microservice
 # rank the candidates based on their fitness score 
-
 import os
 import requests
 from flask import (
@@ -169,11 +168,11 @@ def shortlist():
         # check if the candidate falls within the preferred education level
         if not is_education_level_preferred(target_ds, candidate):
             continue
-            
+
         # check if duration of internship is within the preferred duration
         if not is_internship_duration_eligible(target_ds, candidate):
             continue
-            
+
         # check if english proficiency is within the required level
         if not is_english_test_eligible(target_ds, candidate):
             continue

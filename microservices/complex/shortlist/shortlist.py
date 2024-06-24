@@ -101,6 +101,8 @@ class DS_info:
         # Check if the "department of interest" is in line with that of the role.
         if self.department in candidate.department_of_interest:
             score += 1
+        ##### END OF CALCULATE SCORE PART 4 ######
+
         return score
 
 class Candidate:
@@ -113,30 +115,30 @@ class Candidate:
         self.cv_info = cv_info
 
         # info from job application
-        self.name = job_application_info.get(name)
-        self.nationality = job_application_info.get(nationality)
+        self.name = job_application_info.get("name")
+        self.nationality = job_application_info.get("nationality")
 
-        self.values_test_score = job_application_info.get(values_test_score)
-        self.education_level = job_application_info.get(education_level)
-        self.current_university = job_application_info.get(current_university)
-        self.current_university_country = job_application_info.get(current_university_country)
-        self.current_major = job_application_info.get(current_major)
-        self.graduation_date = job_application_info.get(graduation_date)
+        self.values_test_score = job_application_info.get("values_test_score")
+        self.education_level = job_application_info.get("education_level")
+        self.current_university = job_application_info.get("current_university")
+        self.current_university_country = job_application_info.get("current_university_country")
+        self.current_major = job_application_info.get("current_major")
+        self.graduation_date = job_application_info.get("graduation_date")
 
-        self.internship_expectations = job_application_info.get(internship_expectations)
-        self.internship_duration = job_application_info.get(internship_duration)
-        self.tentative_internship_start_date = job_application_info.get(tentative_internship_start_date)
-        self.tentative_internship_end_date = job_application_info.get(tentative_internship_end_date)
-        self.department_of_interest = job_application_info.get(department_of_interest) # list of departments
-        self.open_to_other_locations = job_application_info.get(open_to_other_locations)
+        self.internship_expectations = job_application_info.get("internship_expectations")
+        self.internship_duration = job_application_info.get("internship_duration")
+        self.tentative_internship_start_date = job_application_info.get("tentative_internship_start_date")
+        self.tentative_internship_end_date = job_application_info.get("tentative_internship_end_date")
+        self.department_of_interest = job_application_info.get("department_of_interest") # list of departments
+        self.open_to_other_locations = job_application_info.get("open_to_other_locations")
         
         # info from CV
-        self.profile = cv_info.get(profile)
-        self.educations = cv_info.get(educations)
-        self.work_experiences = cv_info.get(workExperiences)
-        self.projects = cv_info.get(projects)
-        self.skills = cv_info.get(skills)
-        self.custom = cv_info.get(custom)
+        self.profile = cv_info.get("profile")
+        self.educations = cv_info.get("educations")
+        self.work_experiences = cv_info.get("workExperiences")
+        self.projects = cv_info.get("projects")
+        self.skills = cv_info.get("skills")
+        self.custom = cv_info.get("custom")
         
 app = Flask(__name__)
 CORS(app)
@@ -147,8 +149,27 @@ def ping():
 
 @app.route("/shortlist", methods=["POST"])
 def shortlist():
+
     # get demand survey info from the post request
-    target_ds = DS_info(request.json["title"], request.json["description"])
+    target_ds = DS_info(
+        request.json["name"],
+        request.json["department"],
+        request.json["email_address"],
+        request.json["internship_resources"],
+        request.json["preferred_education_level"],
+        request.json["preferred_course_of_study"],
+        request.json["preferred_number_of_interns"],
+        request.json["internship_preference"],
+        request.json["jd"],
+        request.json["ivl_skills"],
+        request.json["eng_proficiency"],
+        request.json["office_tools"],
+        request.json["programming_languages"],
+        request.json["data_analysis_tools"],
+        request.json["design_tools"],
+        request.json["others"],
+        request.json["additional_test"]
+    )
 
     # get all candidates info from the candidate microservice
     candidates_info = requests.get("http://localhost:9002/all").json()

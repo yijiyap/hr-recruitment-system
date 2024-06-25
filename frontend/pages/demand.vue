@@ -38,6 +38,15 @@
 </template>
 
 <script setup>
+const { data: rolesToHire2 } = await useFetch("http://localhost:5003/ds/all", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
+
+console.log(rolesToHire2.value);
+
 const rolesToHire = {
   role1: {
     roleId: "123",
@@ -107,11 +116,6 @@ const filters = [
 
 const selectedFilter = ref(filters[0]);
 const rolesArray = Object.values(rolesToHire);
-
-onMounted(() => {
-  console.log(selectedFilter.value.name);
-});
-
 
 const periodToNumber = {
   "First half of the year": 1,

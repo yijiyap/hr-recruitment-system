@@ -9,7 +9,11 @@ from O365.excel import WorkBook
 from dotenv import load_dotenv
 
 # only for testing
-load_dotenv('hr-recruitment-system/.env')
+cur_path = os.path.dirname(os.path.realpath(__file__))
+# go back 3 folders to get to the .env file
+for i in range(3):
+      cur_path = os.path.dirname(cur_path)
+load_dotenv(os.path.join(cur_path, '.env'))
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
@@ -17,25 +21,23 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 TENANT_ID = os.getenv("TENANT_ID")
 SCOPE = ["User.Read"]
 
-credentials = (CLIENT_ID, CLIENT_SECRET)
-
 # token storage
-cur_path = os.path.dirname(os.path.realpath(__file__))
 token_backend = FileSystemTokenBackend(token_path=cur_path, token_filename='o365_token.txt')
+credentials = (CLIENT_ID, CLIENT_SECRET)
 
 # with your own identity
 account = Account(credentials, auth_flow_type='credentials', tenant_id=TENANT_ID, token_backend=token_backend)
 if account.authenticate():
    print('Authenticated!')
 
-SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
-sharepoint = account.sharepoint()
-root_site = sharepoint.get_root_site()
+# SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
+# sharepoint = account.sharepoint()
+# root_site = sharepoint.get_root_site()
 
-# storage = account.storage()
-# drives = storage.get_drives()
-# my_drive = storage.get_default_drive()
-# root_folder = my_drive.get_root_folder()
+storage = account.storage()
+drives = storage.get_drives()
+my_drive = storage.get_default_drive()
+root_folder = my_drive.get_root_folder()
 
 # endpoint to call
 # https://graph.microsoft.com/v1.0/sites/SiteID/lists/ListID/items

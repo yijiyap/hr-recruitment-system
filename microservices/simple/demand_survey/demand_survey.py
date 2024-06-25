@@ -33,7 +33,7 @@ def all():
     # go back 3 folders to get to the excel file
     for i in range(4):
         cur_path = os.path.dirname(cur_path)
-    dummy_survey = os.path.join(cur_path, "Internship Demand Survey Form for 2025(1-7).xlsx")
+    dummy_survey = os.path.join(cur_path, "Internship Demand Survey Form for 2025(1-5).xlsx")
 
     df = pl.read_excel(dummy_survey)
 
@@ -44,14 +44,67 @@ def all():
     data = df.to_dicts() # to get row by row
 
     # group the supervisor details together
-    grouped_data = {}
+    grouped_data = []
     for row in data:
-        if row["supervisor"] not in grouped_data:
-            grouped_data[row["supervisor"]] = []
-        grouped_data[row["supervisor"]].append(row)
+        # group sup details
+        supervisor_details = {
+            "supervisorEmail": row["email address"],
+            "supervisorName": row["supervisor name (english)"],
+            "department": row["department"],
+        }
 
+        # group internship details
+        internship_details = {
+            "preferredInternshipResource": row["preferred internship resource"].split(";"),
+            "preferredEducationLevel": row["preferred education level"].split(";"),
+            "roleId": row["id"],
+            "roleName": title(row["department"]) + " " + "Intern",
+            "internshipPeriod": {
+                "first half of the year (jan - jun)": row["first half of the year (jan - jun)"],
+                "second half of the year (jul - dec)": row["second half of the year (jul - dec)"],
+                "summer break (may - aug)": row["summer break (may - aug)"],
+            },
+            "internshipPreference": row["internship preference"].split(";"),
+            "workingConditions": row["working conditions"].split(";"),
+        }
+
+        # group requirements
+        responsibilities = {
+            "description": row["Please provide a detailed description of the tasks and responsibilities you expect the intern to perform"],
+            "experience": row["What specific experience should the ideal candidate have?"],
+            "skills": row["Please choose the skills you would like your intern to possess. The options listed are derived from the Indorama Ventures competency library"].split(";"),
+            "english_required": {
+                "speaking": row["speaking"],
+                "writing": row["writing"],
+                "reading": row["reading"],
+                "listening": row["listening"],
+            },
+            "office_tools": {
+                "microsoft word": row["microsoft word"],
+                "microsoft excel": row["microsoft excel"],
+                "microsoft powerpoint": row["microsoft powerpoint"],
+            },
+        }
+        mandatory_skills, good_to_have_skills = [], []
+        all_skills = ["VBA", "Python", "Tableau"]
+        for s in all_skills:
+            if row[s] == "Mandatory":
+                mandatory_skills.append(s)
+            elif row[s] == "Good-to-have":
+                good_to_have_skills.append(s)
     
+        responsibilities["mandatorySkills"] = mandatory_skills
+        responsibilities["goodToHaveSkills"] = good_to_have_skills
 
+        # compile the grouped data for each row
+        row_data = {
+            "supervisorDetails": supervisor_details,
+            "internshipDetails": internship_details,
+            "responsibilities": responsibilities,
+        }
+
+        # append the row data to the list
+        grouped_data.append(row_data)
 
     return jsonify(data)
 

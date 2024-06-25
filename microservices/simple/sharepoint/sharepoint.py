@@ -27,9 +27,21 @@ account = Account(credentials, auth_flow_type='credentials', tenant_id=TENANT_ID
 if account.authenticate():
    print('Authenticated!')
 
-SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
-sharepoint = account.sharepoint()
-root_site = sharepoint.get_root_site()
+# SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
+# sharepoint = account.sharepoint()
+# root_site = sharepoint.get_root_site()
+
+# storage = account.storage()
+# drives = storage.get_drives()
+# my_drive = storage.get_default_drive()
+# root_folder = my_drive.get_root_folder()
+
+# endpoint to call
+# https://graph.microsoft.com/v1.0/sites/SiteID/lists/ListID/items
+# sharepoint
+# https://indoramaventures.sharepoint.com/:b:/r/sites/IVL_Internship/Shared%20Documents/recruitment-system/2025_resume/cv1.pdf?csf=1&web=1&e=2vvLQP
+
+
 
 # asyncio.run(main())
 

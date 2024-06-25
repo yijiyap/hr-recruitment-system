@@ -4,7 +4,7 @@ This is a complex microservice as it calls on the CV microservice and DS (demand
 ## Immediate rejection criteria
 1. Not in internship resources
 2. Not target Education level
-3. Not in duration of internship
+3. Not in period of internship
 4. If "Good" is required for English proficiency, then must minimally pass the English test
 
 ## Bonus items

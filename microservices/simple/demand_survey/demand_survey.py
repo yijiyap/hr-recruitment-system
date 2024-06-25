@@ -40,8 +40,19 @@ def all():
     # change the headers to lowercase
     df.columns = [col.lower() for col in df.columns]
 
-    # prepare demand survey data to be sent
+    # change to JSON format
     data = df.to_dicts() # to get row by row
+
+    # group the supervisor details together
+    grouped_data = {}
+    for row in data:
+        if row["supervisor"] not in grouped_data:
+            grouped_data[row["supervisor"]] = []
+        grouped_data[row["supervisor"]].append(row)
+
+    
+
+
     return jsonify(data)
 
 @app.route("/ds/test", methods=["POST"])

@@ -28,9 +28,9 @@ account = Account(credentials, auth_flow_type='credentials', tenant_id=TENANT_ID
 if account.authenticate():
    print('Authenticated!')
 
-# SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
-# sharepoint = account.sharepoint()
-# root_site = sharepoint.get_root_site()
+SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
+sharepoint = account.sharepoint()
+root_site = sharepoint.get_root_site()
 
 # storage = account.storage()
 # drives = storage.get_drives()

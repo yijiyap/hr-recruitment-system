@@ -82,6 +82,7 @@ class DS_info:
 
         ###### START OF CALCULATE SCORE PART 3 ######
         # Check if candidate has the required skills
+        # Weighted scoring system for skills
         skills_to_check = [
             self.office_tools,
             self.programming_languages,
@@ -91,10 +92,13 @@ class DS_info:
         ]
         # Check for "Good-to-have" and "Mandatory"
         for skill_to_check in skills_to_check:
-            if skill_to_check and skill_to_check != "Not relevant":
-                for skill in skill_to_check:
-                    if skill in candidate.skills:
+            if skill_to_check and skill_to_check[1] != "Not relevant":
+                if skill_to_check[1] == "Mandatory":
+                    if skill_to_check[0] in candidate_text: # candidate_text is the combined text of all candidate info 
                         score += 1
+                elif skill_to_check[1] == "Good-to-have":
+                    if skill_to_check[0] in candidate_text:
+                        score += 0.5
         ###### END OF CALCULATE SCORE PART 3 ######
 
         ###### START OF CALCULATE SCORE PART 4 ######
@@ -200,6 +204,10 @@ def shortlist():
         
         # CALCULATE SCORE
         fitness_score = target_ds.calculate_fitness_score(candidate)
+
+        # Normalise the score with the number of words in the resume
+        fitness_score = fitness_score / len(candidate_text.split())
+
         shortlisted_candidates.append({'name': candidate.name, 'fitness_score': fitness_score})
     
     return jsonify(sorted(shortlisted_candidates, key=lambda x: x['fitness_score'], reverse=True))

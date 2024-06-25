@@ -28,9 +28,12 @@ The `calculate_fitness_score` function calculates a fitness score for a given ca
 - Then, it calculates the intersection of these sets of keywords (words found in both the JD and the candidate's profile). For each matching keyword, it adds 0.5 to the score. This part measures how many of the job's essential terms the candidate has demonstrated knowledge or experience in.
 ### Part 3: Checking for required skills
 - It iterates through a list of required skills for the job, including office tools, programming languages, data analysis tools, design tools, and other skills.
-- For each category of skills, if the category is applicable (not marked as "Not relevant"), it checks if the candidate lists any of the required skills in their skill set. For each matched skill, it increments the score by 1. This part evaluates the candidate's possession of critical skills needed for the job. 
+- For each category of skills, if the category is applicable (not marked as "Not relevant" in the job description), it checks if the candidate has mentioned any of the skills in that category in their profile.
+    - If the skill is marked as "Good-to-have and above" in the job description, it adds 0.5 to the score for each matching skill.
+    - If the skill is marked as "Mandatory" in the job description, it adds 1 to the score for each matching skill.
 ### Part 4: Departmental Interest Alignment
 - Finally, it checks if the candidate's declared department of interest matches the department associated with the job. If there's a match, it adds 1 to the score. This part ensures that the candidate has expressed interest in working within the right academic or professinoal field.
 ### Part 5: Final Score Calculation
 - The final score is the sum of the scores from the four parts above. This score is used to rank candidates based on how well they match the job description and requirements. The higher the score, the better the candidate's fit for the position.
+- Because the score is based on the number of matching keywords, it may favour candidates with longer resumes or more verbose descriptions. Therefore, a normalization step is done to account for this bias. The score is divided by the total number of keywords in the job description to get a percentage score, which is then multiplied by 100 to get a score out of 100.
 

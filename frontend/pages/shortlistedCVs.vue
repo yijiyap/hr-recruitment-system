@@ -1,6 +1,6 @@
 <template>
     <div class="tw-font-noto">
-        <Header header-text="3. Shortlisted CVs" />
+        <Header header-text="3. Shortlisted Candidates" />
 
         <div class="container-fluid my-3">
             <div class="row bg-light p-3 my-3">

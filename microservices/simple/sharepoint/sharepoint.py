@@ -5,6 +5,7 @@ import asyncio
 import asyncio
 from flask_cors import CORS
 from O365 import Account, MSGraphProtocol, FileSystemTokenBackend
+from O365.excel import WorkBook
 from dotenv import load_dotenv
 
 # only for testing

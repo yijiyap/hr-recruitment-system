@@ -4,10 +4,10 @@ This microservice helps in selecting the best candidates for internships by eval
 ## How it works
 ### Immediate rejection criteria
 Candidates are autumatically rejected if they do not meet the following criteria:
-1. They are not listed in the internship resources
-2. They are not in the target Education level
-3. They are not availbale during the required internship period period
-4. If "Good" English proficiency is required, they must minimally pass the English test
+1. They are not listed in the preferred internship resources (eg if the hiring manager selects "Domestic" for the 6mth internship period but the applicant is an "International" student) 
+2. They are not in the target Education Level (eg if the hiring manager specifically requires a "Masters" student only, but the applicant is a "Bachelors" student)
+3. They are not available during the required internship period
+4. They fail the "English" test when a "Good" or above English proficiency is required, 
 
 ## Point system
 Candidates can earn points if they:

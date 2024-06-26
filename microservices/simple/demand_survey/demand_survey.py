@@ -31,7 +31,7 @@ def all():
     # only for testingg
     cur_path = os.path.dirname(os.path.realpath(__file__))
     # go back 3 folders to get to the excel file
-    for i in range(4):
+    for _ in range(4):
         cur_path = os.path.dirname(cur_path)
     dummy_survey = os.path.join(cur_path, "Internship Demand Survey Form for 2025(1-5).xlsx")
 
@@ -58,7 +58,7 @@ def all():
             "preferredInternshipResource": row["preferred internship resource"].split(";"),
             "preferredEducationLevel": row["preferred education level"].split(";"),
             "roleId": row["id"],
-            "roleName": title(row["department"]) + " " + "Intern",
+            "roleName": row["department"].title() + " " + "Intern",
             "internshipPeriod": {
                 "first half of the year (jan - jun)": row["first half of the year (jan - jun)"],
                 "second half of the year (jul - dec)": row["second half of the year (jul - dec)"],
@@ -86,27 +86,42 @@ def all():
             },
         }
         mandatory_skills, good_to_have_skills = [], []
-        all_skills = ["VBA", "Python", "Tableau"]
+        all_skills = ["vba", "python", "tableau", "power bi", "data management", "adobe photoshop", "adobe illustrator", "adobe premiere pro", "canva", "figma"]
+        
         for s in all_skills:
             if row[s] == "Mandatory":
-                mandatory_skills.append(s)
+                mandatory_skills.append(s.title())
             elif row[s] == "Good-to-have":
-                good_to_have_skills.append(s)
-    
+                good_to_have_skills.append(s.title())
+
+        other_skills = row["others"]
+        for skill_n_kind in other_skills.split(";"):
+            if skill_n_kind.strip():
+                skill, kind = skill_n_kind.split(":")
+                skill = skill.strip()
+                kind = kind.strip()
+                if kind == "Mandatory":
+                    mandatory_skills.append(skill)
+                elif kind == "Good-to-have":
+                    good_to_have_skills.append(skill)
+
         responsibilities["mandatorySkills"] = mandatory_skills
         responsibilities["goodToHaveSkills"] = good_to_have_skills
+
+        extra_test = row.get("what type of assessment will it be", "")
 
         # compile the grouped data for each row
         row_data = {
             "supervisorDetails": supervisor_details,
             "internshipDetails": internship_details,
             "responsibilities": responsibilities,
+            "extraTest": extra_test,
         }
 
         # append the row data to the list
         grouped_data.append(row_data)
 
-    return jsonify(data)
+    return jsonify(grouped_data)
 
 @app.route("/ds/test", methods=["POST"])
 def upload_excel():

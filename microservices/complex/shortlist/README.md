@@ -18,8 +18,8 @@ Candidates can earn points if they:
 
 ## Algorithms considered
 1. Keyword matching - the more matches there are between the candidate and the DS information, the higher the ranking
-2. Cosine similarity - paper taken from [here](https://www.researchgate.net/publication/366706213_Evaluating_Automatic_CV_Shortlisting_Tool_For_Job_Recruitment_Based_On_Machine_Learning_Techniques)
-3. TF-IDF similarity - reference to this project [here](https://github.com/harsha-chirumamilla/resume-screening)
+2. Cosine similarity - paper taken from [here](https://www.researchgate.net/publication/366706213_Evaluating_Automatic_CV_Shortlisting_Tool_For_Job_Recruitment_Based_On_Machine_Learning_Techniques) (YET TO BE IMPLEMENTED)
+3. TF-IDF similarity - reference to this project [here](https://github.com/harsha-chirumamilla/resume-screening) (YET TO BE IMPLEMENTED)
 
 ## Fitness Score Calculation Deep Dive
 The `calculate_fitness_score` function calculates a fitness score for a given candidate based on several criteria derived from the job description. It uses keyword matching to assess how closely the candidate's qualifications, experiences, and interests align wth those required for the position. Here is a breakdown of how the algorithm works:

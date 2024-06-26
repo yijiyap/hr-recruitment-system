@@ -70,9 +70,9 @@ def all():
 
         # group requirements
         responsibilities = {
-            "description": row["Please provide a detailed description of the tasks and responsibilities you expect the intern to perform"],
-            "experience": row["What specific experience should the ideal candidate have?"],
-            "skills": row["Please choose the skills you would like your intern to possess. The options listed are derived from the Indorama Ventures competency library"].split(";"),
+            "description": row["please provide a detailed description of the tasks and responsibilities you expect the intern to perform"],
+            "experience": row["what specific experience should the ideal candidate have?"],
+            "skills": row["please choose the skills you would like your intern to possess. the options listed are derived from the indorama ventures competency library"].split(";"),
             "english_required": {
                 "speaking": row["speaking"],
                 "writing": row["writing"],
@@ -95,15 +95,16 @@ def all():
                 good_to_have_skills.append(s.title())
 
         other_skills = row["others"]
-        for skill_n_kind in other_skills.split(";"):
-            if skill_n_kind.strip():
-                skill, kind = skill_n_kind.split(":")
-                skill = skill.strip()
-                kind = kind.strip()
-                if kind == "Mandatory":
-                    mandatory_skills.append(skill)
-                elif kind == "Good-to-have":
-                    good_to_have_skills.append(skill)
+        if other_skills:
+            for skill_n_kind in other_skills.split(";"):
+                if skill_n_kind.strip():
+                    skill, kind = skill_n_kind.split(":")
+                    skill = skill.strip()
+                    kind = kind.strip()
+                    if kind == "Mandatory":
+                        mandatory_skills.append(skill)
+                    elif kind == "Good-to-have":
+                        good_to_have_skills.append(skill)
 
         responsibilities["mandatorySkills"] = mandatory_skills
         responsibilities["goodToHaveSkills"] = good_to_have_skills

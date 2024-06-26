@@ -20,6 +20,7 @@ CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REDIRECT_URI = os.getenv("REDIRECT_URI")
 TENANT_ID = os.getenv("TENANT_ID")
 SCOPE = ["User.Read"]
+INTERNSHIP_SHAREPOINT_SITE = os.getenv("INTERNSHIP_SHAREPOINT_SITE")
 
 # token storage
 token_backend = FileSystemTokenBackend(token_path=cur_path, token_filename='o365_token.txt')
@@ -32,15 +33,46 @@ if account.authenticate():
 
 SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
 sharepoint = account.sharepoint()
-root_site = sharepoint.get_root_site()
 
-# storage = account.storage()
-# drives = storage.get_drives()
-# my_drive = storage.get_default_drive()
-# root_folder = my_drive.get_root_folder()
+# Using the site's url
+site = sharepoint.get_site(INTERNSHIP_SHAREPOINT_SITE)
+
+
+
+# root_site = sharepoint.get_root_site()
+
+# # List all document libraries
+libraries = root_site.list_document_libraries()
+
+# """ possible libraries
+# Library: Site Collection Images
+# Library: Site Collection Documents
+# Library: Shared Documents
+# Library: GBS-DL
+# Library: Drop Off Library
+# Library: Search Config List
+# """
+# def explore_folder(folder):
+#    for item in folder.get_items():
+#       if item.is_folder:
+#          print(f"Folder: {item.name}")
+#          explore_folder(item)
+#       else:
+#          print("Current folder: ", folder.name)
+#          print(f"File: {item.name}")
+
+# # Print names of all libraries
+for library in libraries:
+   print(library.name)
+#    if library.name == "Search Config List":
+#       print("Found the 'Search Config List' library!")
+#       explore_folder(library)
+
+
+
 
 # endpoint to call
-# https://graph.microsoft.com/v1.0/sites/SiteID/lists/ListID/items
+# https://graph.microsoft.com/v1.0/sites/{site-id}/drive
 # sharepoint
 # https://indoramaventures.sharepoint.com/:b:/r/sites/IVL_Internship/Shared%20Documents/recruitment-system/2025_resume/cv1.pdf?csf=1&web=1&e=2vvLQP
 

@@ -13,7 +13,7 @@ Candidates are autumatically rejected if they do not meet the following criteria
 Candidates can earn points if they:
 1. Are studying in a preferred course of study
 2. Have keywords in their resumes that match the job description and required experience
-3. Mention sills in their resumes that are marked as "Good-to-have" or higher in the job requirements. (Mandatory and Good-to-have skills are weighted differently) 
+3. Mention skills in their resumes that are marked as "Good-to-have" or higher in the job requirements. (Mandatory and Good-to-have skills are weighted differently) 
 4. Have a department of interest that aligns with the role
 
 ## Algorithms considered

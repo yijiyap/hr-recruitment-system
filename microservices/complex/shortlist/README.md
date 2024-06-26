@@ -1,17 +1,20 @@
 # Shortlist microservice
-This is a complex microservice as it calls on the CV microservice and DS (demand survey) microservice to shortlist the right candidate.
+This microservice helps in selecting the best candidates for internships by evaluating their resumes against the job requirements from the demand survey and the CV microservice. A scoring system is used to grade candidates on their suitability for the role.
 
-## Immediate rejection criteria
-1. Not in internship resources
-2. Not target Education level
-3. Not in period of internship
-4. If "Good" is required for English proficiency, then must minimally pass the English test
+## How it works
+### Immediate rejection criteria
+Candidates are autumatically rejected if they do not meet the following criteria:
+1. They are not listed in the internship resources
+2. They are not in the target Education level
+3. They are not availbale during the required internship period period
+4. If "Good" English proficiency is required, they must minimally pass the English test
 
-## Bonus items
-1. In preferred course of study
-2. Words in job description and experience required match the words in the intern's application
-3. If the skills in the DS are tagged as "Good-to-have and above", then having the word in your application will be an extra point 
-4. If the "department of interest" is in line with the role, then it will be an extra point
+## Point system
+Candidates can earn points if they:
+1. Are studying in a preferred course of study
+2. Have keywords in their resumes that match the job description and required experience
+3. Mention sills in their resumes that are marked as "Good-to-have" or higher in the job requirements. (Mandatory and Good-to-have skills are weighted differently) 
+4. Have a department of interest that aligns with the role
 
 ## Algorithms considered
 1. Keyword matching - the more matches there are between the candidate and the DS information, the higher the ranking

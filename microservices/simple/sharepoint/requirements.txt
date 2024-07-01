@@ -1,6 +1,5 @@
 requests
 flask
-azure-identity
-msgraph-sdk
 flask_cors
-O365
+rich
+polars

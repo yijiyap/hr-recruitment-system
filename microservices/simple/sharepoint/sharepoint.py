@@ -4,11 +4,9 @@ import os
 import asyncio
 import asyncio
 from flask_cors import CORS
-from O365 import Account, MSGraphProtocol, FileSystemTokenBackend
-from O365.excel import WorkBook
 from dotenv import load_dotenv
 from rich import print
-import base64
+import polars as pl
 
 app = Flask(__name__)
 CORS(app)
@@ -47,6 +45,9 @@ def ping():
    
 @app.route("/sharepoint/cv/all", methods=["GET"])
 def all_cv():
+      """
+      This endpoint will be called by the cv_parser microservice to get the CVs of all candidates.
+      """
       # Get the list of files in the SharePoint library
       url = f'https://graph.microsoft.com/v1.0/sites/{INTERNSHIP_SHAREPOINT_SITE_ID}/drives/{INTERNSHIP_SHAREPOINT_DRIVE_ID}/items/root:/recruitment-system/2025_resume:/children'
       headers = {
@@ -74,55 +75,30 @@ def all_cv():
          "files": files_to_return
       })
 
+@app.route("/sharepoint/ds/all", methods=["GET"])
+def all_ds():
+      """
+      This microservice will be called by the demand_survey microservice to get the demand survey data.
+      
+      Note: THIS CODE ASSUMES THAT THERE IS ONLY 1 FILE IN THE FOLDER "demand_survey"
+      """
+      # Get the list of files in the SharePoint library
+      url = f'https://graph.microsoft.com/v1.0/sites/{INTERNSHIP_SHAREPOINT_SITE_ID}/drives/{INTERNSHIP_SHAREPOINT_DRIVE_ID}/items/root:/recruitment-system/demand_survey:/children'
+      headers = {
+         'Authorization': f'Bearer {access_token}'
+      }
+      response = requests.get(url, headers=headers)
+      download_url = response.json()['value'][0]['@microsoft.graph.downloadUrl']
+
+      # process the file content and return it
+      df = pl.read_excel(download_url)
+
+      return jsonify({
+         "df": df.to_dict(as_series=False)
+      })
+
 if __name__ == "__main__":
    app.run(port=5001, debug=True, host='0.0.0.0')
-# ********************************************************************************************************************
-# token storage
-# token_backend = FileSystemTokenBackend(token_path=cur_path, token_filename='o365_token.txt')
-# credentials = (CLIENT_ID, CLIENT_SECRET)
-
-# # with your own identity
-# account = Account(credentials, auth_flow_type='credentials', tenant_id=TENANT_ID, token_backend=token_backend)
-# if account.authenticate():
-#    print('Authenticated!')
-
-# sharepoint = account.sharepoint()
-
-# # Using the site's url
-# site = sharepoint.get_site(INTERNSHIP_SHAREPOINT_SITE_ID)
-
-# a = site.list_document_libraries()
-# print(a)
-# ********************************************************************************************************************
-
-# # Navigate to specific folder
-# folder_path = "/Shared Documents/recruitment-system/2025-resume/"
-# folder = doc_library.get_item_by_path(folder_path)
-
-# # List files in the folder
-# files = folder.get_items() # returns a list of items in the folder
-
-# # Print or process the files
-# for item in files:
-#     if item.is_file:
-#         print(f"File: {item.name}")
-#     elif item.is_folder:
-#         print(f"Subfolder: {item.name}")
-
-
-
-# endpoint to call
-# https://graph.microsoft.com/v1.0/sites/{site-id}/drive
-# sharepoint
-# https://indoramaventures.sharepoint.com/:b:/r/sites/IVL_Internship/Shared%20Documents/recruitment-system/2025_resume/cv1.pdf?csf=1&web=1&e=2vvLQP
-
-
-
-# asyncio.run(main())
-
-# @app.route("/ping", methods=["GET"])
-# def ping():
-#     return "pong"
 
 # @app.route("/sharepoint/job_app/all", methods=["GET"])
 # def all():

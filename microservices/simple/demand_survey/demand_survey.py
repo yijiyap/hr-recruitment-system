@@ -27,15 +27,21 @@ def all():
     # call the SharePoint Wrapper microservice to get the demand survey data
     # response = requests.get("http://localhost:5001/sharepoint/ds/all")
 
+    ############################################################################## only for testingg
     # for now, we get the excel file of the results locally
-    # only for testingg
-    cur_path = os.path.dirname(os.path.realpath(__file__))
-    # go back 3 folders to get to the excel file
-    for _ in range(4):
-        cur_path = os.path.dirname(cur_path)
-    dummy_survey = os.path.join(cur_path, "Internship Demand Survey Form for 2025(1-5).xlsx")
+    # cur_path = os.path.dirname(os.path.realpath(__file__))
+    # # go back 3 folders to get to the excel file
+    # for _ in range(4):
+    #     cur_path = os.path.dirname(cur_path)
+    # dummy_survey = os.path.join(cur_path, "Internship Demand Survey Form for 2025(1-5).xlsx")
+    ############################################################################## end of testing code
 
-    df = pl.read_excel(dummy_survey)
+    # call the sharepoint microservie for the excel file
+    response = requests.get("http://localhost:5001/sharepoint/ds/all")
+    df_dict= response.json()["df"]
+
+    # Convert the dict back to polars df
+    df = pl.DataFrame(df_dict)
 
     # change the headers to lowercase
     df.columns = [col.lower() for col in df.columns]

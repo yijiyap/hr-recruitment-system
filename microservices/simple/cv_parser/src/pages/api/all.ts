@@ -18,6 +18,7 @@ const all = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const spCVs = await fetch('http://localhost:5001/sharepoint/cv/all')
       const filesToParse  = await spCVs.json()
+      console.log(filesToParse);
 
       // Initialize an array to hold the parsed CVs
       const parsedCVs = [];

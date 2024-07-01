@@ -7,6 +7,7 @@ from flask_cors import CORS
 from O365 import Account, MSGraphProtocol, FileSystemTokenBackend
 from O365.excel import WorkBook
 from dotenv import load_dotenv
+from rich import print
 
 # only for testing
 cur_path = os.path.dirname(os.path.realpath(__file__))
@@ -21,53 +22,77 @@ REDIRECT_URI = os.getenv("REDIRECT_URI")
 TENANT_ID = os.getenv("TENANT_ID")
 SCOPE = ["User.Read"]
 INTERNSHIP_SHAREPOINT_SITE = os.getenv("INTERNSHIP_SHAREPOINT_SITE")
+INTERNSHIP_SHAREPOINT_SITE_ID = os.getenv("INTERNSHIP_SHAREPOINT_SITE_ID")
+INTERNSHIP_SHAREPOINT_LIBRARY_NAME = os.getenv("INTERNSHIP_SHAREPOINT_LIBRARY_NAME")
+INTERNSHIP_SHAREPOINT_DRIVE_ID = os.getenv("INTERNSHIP_SHAREPOINT_DRIVE_ID")
 
+# Authenticate and get access token
+auth_url = f'https://login.microsoftonline.com/{TENANT_ID}/oauth2/v2.0/token'
+data = {
+      'grant_type': 'client_credentials',
+      'client_id': CLIENT_ID,
+      'client_secret': CLIENT_SECRET,
+      'scope': 'https://graph.microsoft.com/.default'
+}
+response = requests.post(auth_url, data=data)
+access_token = response.json()['access_token']
+
+# Get the list of files in the SharePoint library
+url = f'https://graph.microsoft.com/v1.0/sites/{INTERNSHIP_SHAREPOINT_SITE_ID}/drives/{INTERNSHIP_SHAREPOINT_DRIVE_ID}/items/root:/recruitment-system/2025_resume:/children'
+headers = {
+   'Authorization': f'Bearer {access_token}'
+}
+response = requests.get(url, headers=headers)
+files = response.json()['value']
+print(files)
+
+# download each pdf file and send it to the cv_parser microservice
+for file in files:
+   try:
+      download_url = file['@microsoft.graph.downloadUrl']
+      # download the pdf file from the download url
+      response = requests.get(download_url)
+      response.raise_for_status()
+      pdf_file = response.content
+      
+      
+
+   except Exception as e:
+      print(f"An error occurred while processing the file: {file['name']}")
+      print(e)
+
+# ********************************************************************************************************************
 # token storage
-token_backend = FileSystemTokenBackend(token_path=cur_path, token_filename='o365_token.txt')
-credentials = (CLIENT_ID, CLIENT_SECRET)
+# token_backend = FileSystemTokenBackend(token_path=cur_path, token_filename='o365_token.txt')
+# credentials = (CLIENT_ID, CLIENT_SECRET)
 
-# with your own identity
-account = Account(credentials, auth_flow_type='credentials', tenant_id=TENANT_ID, token_backend=token_backend)
-if account.authenticate():
-   print('Authenticated!')
+# # with your own identity
+# account = Account(credentials, auth_flow_type='credentials', tenant_id=TENANT_ID, token_backend=token_backend)
+# if account.authenticate():
+#    print('Authenticated!')
 
-SHAREPOINT_SITE_ID = os.getenv("SHAREPOINT_SITE_ID")
-sharepoint = account.sharepoint()
+# sharepoint = account.sharepoint()
 
-# Using the site's url
-site = sharepoint.get_site(INTERNSHIP_SHAREPOINT_SITE)
+# # Using the site's url
+# site = sharepoint.get_site(INTERNSHIP_SHAREPOINT_SITE_ID)
 
+# a = site.list_document_libraries()
+# print(a)
+# ********************************************************************************************************************
 
+# # Navigate to specific folder
+# folder_path = "/Shared Documents/recruitment-system/2025-resume/"
+# folder = doc_library.get_item_by_path(folder_path)
 
-# root_site = sharepoint.get_root_site()
+# # List files in the folder
+# files = folder.get_items() # returns a list of items in the folder
 
-# # List all document libraries
-libraries = root_site.list_document_libraries()
-
-# """ possible libraries
-# Library: Site Collection Images
-# Library: Site Collection Documents
-# Library: Shared Documents
-# Library: GBS-DL
-# Library: Drop Off Library
-# Library: Search Config List
-# """
-# def explore_folder(folder):
-#    for item in folder.get_items():
-#       if item.is_folder:
-#          print(f"Folder: {item.name}")
-#          explore_folder(item)
-#       else:
-#          print("Current folder: ", folder.name)
-#          print(f"File: {item.name}")
-
-# # Print names of all libraries
-for library in libraries:
-   print(library.name)
-#    if library.name == "Search Config List":
-#       print("Found the 'Search Config List' library!")
-#       explore_folder(library)
-
+# # Print or process the files
+# for item in files:
+#     if item.is_file:
+#         print(f"File: {item.name}")
+#     elif item.is_folder:
+#         print(f"Subfolder: {item.name}")
 
 
 

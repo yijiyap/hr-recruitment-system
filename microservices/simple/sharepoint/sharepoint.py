@@ -8,6 +8,10 @@ from O365 import Account, MSGraphProtocol, FileSystemTokenBackend
 from O365.excel import WorkBook
 from dotenv import load_dotenv
 from rich import print
+import base64
+
+app = Flask(__name__)
+CORS(app)
 
 # only for testing
 cur_path = os.path.dirname(os.path.realpath(__file__))
@@ -37,30 +41,48 @@ data = {
 response = requests.post(auth_url, data=data)
 access_token = response.json()['access_token']
 
-# Get the list of files in the SharePoint library
-url = f'https://graph.microsoft.com/v1.0/sites/{INTERNSHIP_SHAREPOINT_SITE_ID}/drives/{INTERNSHIP_SHAREPOINT_DRIVE_ID}/items/root:/recruitment-system/2025_resume:/children'
-headers = {
-   'Authorization': f'Bearer {access_token}'
-}
-response = requests.get(url, headers=headers)
-files = response.json()['value']
-print(files)
+@app.route("/ping", methods=["GET"])
+def ping():
+      return "pong"
+   
+@app.route("/sharepoint/cv/all", methods=["GET"])
+def all_cv():
+      # Get the list of files in the SharePoint library
+      url = f'https://graph.microsoft.com/v1.0/sites/{INTERNSHIP_SHAREPOINT_SITE_ID}/drives/{INTERNSHIP_SHAREPOINT_DRIVE_ID}/items/root:/recruitment-system/2025_resume:/children'
+      headers = {
+         'Authorization': f'Bearer {access_token}'
+      }
+      response = requests.get(url, headers=headers)
+      files = response.json()['value']
 
-# download each pdf file and send it to the cv_parser microservice
-for file in files:
-   try:
-      download_url = file['@microsoft.graph.downloadUrl']
-      # download the pdf file from the download url
-      response = requests.get(download_url)
-      response.raise_for_status()
-      pdf_file = response.content
-      
-      
+      files_to_return = []
 
-   except Exception as e:
-      print(f"An error occurred while processing the file: {file['name']}")
-      print(e)
+      # download each pdf file and send it to the cv_parser microservice
+      for file in files:
+         try:
+            download_url = file['@microsoft.graph.downloadUrl']
+            # download the pdf file from the download url
+            response = requests.get(download_url)
+            response.raise_for_status()
+            pdf_file = response.content
 
+            # Encode the pdf file to base64
+            encoded_pdf = base64.b64encode(pdf_file).decode('utf-8')
+            
+            files_to_return.append({
+               "name": file['name'],
+               "content": encoded_pdf
+            })
+         except Exception as e:
+            print(f"An error occurred while processing the file: {file['name']}")
+            print(e)
+
+      return jsonify({
+         "files": files_to_return
+      })
+
+if __name__ == "__main__":
+   app.run(port=5001, debug=True, host='0.0.0.0')
 # ********************************************************************************************************************
 # token storage
 # token_backend = FileSystemTokenBackend(token_path=cur_path, token_filename='o365_token.txt')
@@ -104,9 +126,6 @@ for file in files:
 
 
 # asyncio.run(main())
-
-# app = Flask(__name__)
-# CORS(app)
 
 # @app.route("/ping", methods=["GET"])
 # def ping():

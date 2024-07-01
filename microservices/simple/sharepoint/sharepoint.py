@@ -59,8 +59,6 @@ def all_cv():
 
       # download each pdf file and send it to the cv_parser microservice
       for file in files:
-
-         print("the file name is", file)
          try:
             download_url = file['@microsoft.graph.downloadUrl']
             

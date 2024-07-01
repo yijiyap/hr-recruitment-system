@@ -97,51 +97,49 @@ def all_ds():
          "df": df.to_dict(as_series=False)
       })
 
+@app.route("/sharepoint/app_form/all", methods=["GET"])
+def all_app_form():
+      """
+      This microservice will be called by the candidates microservice to get the application forms.
+
+      Note: THIS CODE ASSUMES THAT THERE IS ONLY 1 FILE IN THE FOLDER "application_forms"
+      """
+      # Get the list of files in the SharePoint library
+      url = f'https://graph.microsoft.com/v1.0/sites/{INTERNSHIP_SHAREPOINT_SITE_ID}/drives/{INTERNSHIP_SHAREPOINT_DRIVE_ID}/items/root:/recruitment-system/application_forms:/children'
+      headers = {
+         'Authorization': f'Bearer {access_token}'
+      }
+      response = requests.get(url, headers=headers)
+      download_url = response.json()['value'][0]['@microsoft.graph.downloadUrl']
+
+      # process the file content and return it
+      df = pl.read_excel(download_url)
+
+      return jsonify({
+         "df": df.to_dict(as_series=False)
+      })
+
+@app.route("/sharepoint/eng_test/all", methods=["GET"])
+def all_eng_test():
+      """
+      This microservice will be called by the candidates microservice to get the English test scores.
+
+      Note: THIS CODE ASSUMES THAT THERE IS ONLY 1 FILE IN THE FOLDER "english_test"
+      """
+      # Get the list of files in the SharePoint library
+      url = f'https://graph.microsoft.com/v1.0/sites/{INTERNSHIP_SHAREPOINT_SITE_ID}/drives/{INTERNSHIP_SHAREPOINT_DRIVE_ID}/items/root:/recruitment-system/english_test_score:/children'
+      headers = {
+         'Authorization': f'Bearer {access_token}'
+      }
+      response = requests.get(url, headers=headers)
+      download_url = response.json()['value'][0]['@microsoft.graph.downloadUrl']
+
+      # process the file content and return it
+      df = pl.read_excel(download_url)
+
+      return jsonify({
+         "df": df.to_dict(as_series=False)
+      })
+
 if __name__ == "__main__":
    app.run(port=5001, debug=True, host='0.0.0.0')
-
-# @app.route("/sharepoint/job_app/all", methods=["GET"])
-# def all():
-#     """
-#     This endpoint will be called by the `candidates` microservice to get the job application info of all candidates.
-#     When this endpoint is called, the `sharepoint` microservice will call the SharePoint API and get all the job application info from SharePoint.
-
-#     It will return the job application info of all candidates in the following JSON format:
-#     {
-#         "
-#         "
-#     }
-#     """
-#     # GRAPH API CODE HERE
-
-#     # Convert the PDF urls to base64 encoded strings
-#     pass
-
-# @app.route("/sharepoint/cv/all", methods=["GET"])
-# def all_cv():
-#     """
-#     This endpoint will be called by the `candidates` microservice to get the CVs of all candidates.
-#     When this endpoint is called, the `sharepoint` microservice will call the SharePoint API and get all the CVs from SharePoint.
-
-#     It will return the CVs of all candidates in PDF format.
-#     """
-#     # GRAPH API CODE HERE
-
-#     # Convert the PDF urls to base64 encoded strings
-#     files_base64 = []
-#     for file_url in pdf_urls:
-#         response = requests.get(file_url)
-#         if response.status_code == 200:
-#             files_base64.append(response.content)
-
-#     # Send the base64 encoded PDFs to the Next.js microservice
-#     headers = {'Content-Type' : 'application/json'}
-#     cv_parser_url = "http://localhost:5003/api/all"
-#     try:
-#         response = requests.post(cv_parser_url, json={"files": files_base64}, headers=headers)
-#         if response.status_code == 200:
-#             return jsonify({"message": "The cv of all candidates has been successfully consolidated.", "data": response.json()})    
-#     except Exception as e:
-#         return jsonify({"message": "An error occurred while consolidating the cv of all candidates."})
-
-#     return jsonify({"message": "This endpoint will return the cv of all candidates in PDF format."})

@@ -24,18 +24,6 @@ def all():
     2. DS microservice will call the SharePoint Wrapper microservice to get all the demand survey data.
     3. DS microservice will then return the DS info to the frontend.
     """
-    # call the SharePoint Wrapper microservice to get the demand survey data
-    # response = requests.get("http://localhost:5001/sharepoint/ds/all")
-
-    ############################################################################## only for testingg
-    # for now, we get the excel file of the results locally
-    # cur_path = os.path.dirname(os.path.realpath(__file__))
-    # # go back 3 folders to get to the excel file
-    # for _ in range(4):
-    #     cur_path = os.path.dirname(cur_path)
-    # dummy_survey = os.path.join(cur_path, "Internship Demand Survey Form for 2025(1-5).xlsx")
-    ############################################################################## end of testing code
-
     # call the sharepoint microservie for the excel file
     response = requests.get("http://localhost:5001/sharepoint/ds/all")
     df_dict= response.json()["df"]

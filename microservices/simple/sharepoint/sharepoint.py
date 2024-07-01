@@ -59,19 +59,14 @@ def all_cv():
 
       # download each pdf file and send it to the cv_parser microservice
       for file in files:
+
+         print("the file name is", file)
          try:
             download_url = file['@microsoft.graph.downloadUrl']
-            # download the pdf file from the download url
-            response = requests.get(download_url)
-            response.raise_for_status()
-            pdf_file = response.content
-
-            # Encode the pdf file to base64
-            encoded_pdf = base64.b64encode(pdf_file).decode('utf-8')
             
             files_to_return.append({
-               "name": file['name'],
-               "content": encoded_pdf
+               "id": file['id'],
+               "content": download_url
             })
          except Exception as e:
             print(f"An error occurred while processing the file: {file['name']}")

@@ -4,3 +4,5 @@ flask_cors
 rich
 polars
 python-dotenv
+xlsx2csv
+fastexcel

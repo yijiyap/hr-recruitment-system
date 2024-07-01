@@ -17,15 +17,17 @@ CORS(app)
 def ping():
     return "pong"
 
-@app.route("/ds/all", methods=["GET"])
+@app.route("/all", methods=["GET"])
 def all():
     """
     1. This endpoint will be called by the frontend to get all the demand survey data.
     2. DS microservice will call the SharePoint Wrapper microservice to get all the demand survey data.
     3. DS microservice will then return the DS info to the frontend.
     """
+    print("REQUEST RECEIVED")
     # call the sharepoint microservie for the excel file
-    response = requests.get("http://localhost:5001/sharepoint/ds/all")
+    response = requests.get("http://sharepoint:5001/ds/all")
+    # http://localhost:5003/ds/all
     df_dict= response.json()["df"]
 
     # Convert the dict back to polars df

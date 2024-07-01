@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-const { data: rolesToHire2 } = await useFetch("http://localhost:5003/ds/all", {
+const { data: rolesToHire2 } = await useFetch("http://localhost:5003/all", {
   method: "GET",
   headers: {
     "Content-Type": "application/json",

@@ -9,7 +9,7 @@ app = Quart(__name__)
 async def ping():
     return "pong"
 
-@app.route("/candidates/all", methods=["GET"])
+@app.route("/all", methods=["GET"])
 async def all():
     """
     consolidate the following candidate info:

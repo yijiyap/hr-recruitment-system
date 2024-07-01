@@ -17,7 +17,7 @@ CORS(app)
 def ping():
     return "pong"
 
-@app.route("/eng_test/all", methods=["GET"])
+@app.route("/all", methods=["GET"])
 def all():
     """
     This endpoint will be called by the `candidates` microservice to get the english test scores of all candidates.

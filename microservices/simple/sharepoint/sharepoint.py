@@ -44,7 +44,7 @@ access_token = response.json()['access_token']
 def ping():
       return "pong"
    
-@app.route("/sharepoint/cv/all", methods=["GET"])
+@app.route("/cv/all", methods=["GET"])
 def all_cv():
       """
       This endpoint will be called by the cv_parser microservice to get the CVs of all candidates.
@@ -76,7 +76,7 @@ def all_cv():
          "files": files_to_return
       })
 
-@app.route("/sharepoint/ds/all", methods=["GET"])
+@app.route("/ds/all", methods=["GET"])
 def all_ds():
       """
       This microservice will be called by the demand_survey microservice to get the demand survey data.
@@ -98,7 +98,7 @@ def all_ds():
          "df": df.to_dict(as_series=False)
       })
 
-@app.route("/sharepoint/app_form/all", methods=["GET"])
+@app.route("/app_form/all", methods=["GET"])
 def all_app_form():
       """
       This microservice will be called by the candidates microservice to get the application forms.
@@ -120,7 +120,7 @@ def all_app_form():
          "df": df.to_dict(as_series=False)
       })
 
-@app.route("/sharepoint/eng_test/all", methods=["GET"])
+@app.route("/eng_test/all", methods=["GET"])
 def all_eng_test():
       """
       This microservice will be called by the candidates microservice to get the English test scores.
@@ -143,4 +143,4 @@ def all_eng_test():
       })
 
 if __name__ == "__main__":
-   app.run(port=5001, debug=True, host='0.0.0.0')
+   app.run(host="0.0.0.0", port=5001, debug=True)

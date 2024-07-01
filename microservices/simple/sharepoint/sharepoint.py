@@ -14,9 +14,9 @@ CORS(app)
 # only for testing
 cur_path = os.path.dirname(os.path.realpath(__file__))
 # go back 3 folders to get to the .env file
-for i in range(3):
-      cur_path = os.path.dirname(cur_path)
-load_dotenv(os.path.join(cur_path, '.env'))
+# for i in range(3):
+#       cur_path = os.path.dirname(cur_path)
+# load_dotenv(os.path.join(cur_path, '.env'))
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
@@ -37,6 +37,7 @@ data = {
       'scope': 'https://graph.microsoft.com/.default'
 }
 response = requests.post(auth_url, data=data)
+print(response.json())
 access_token = response.json()['access_token']
 
 @app.route("/ping", methods=["GET"])

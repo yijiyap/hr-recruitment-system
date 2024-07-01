@@ -52,7 +52,7 @@ async function processFile(fileUrl: string) {
   // Step 4. Extract resume from sections
   const resume = extractResumeFromSections(sections);
 
-  console.log(resume);
+  // console.log(resume);
 
   return resume;
 }
